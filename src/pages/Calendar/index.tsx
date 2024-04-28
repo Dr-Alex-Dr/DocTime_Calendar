@@ -1,15 +1,14 @@
-import {
-  DataGrid,
-  GridColDef,
-  GridRenderCellParams,
-} from "@mui/x-data-grid";
+import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import Box from "@mui/material/Box";
 import { Cell } from "../../entities/table";
 import { useGetIntervalsQuery } from "../../entities/table/api/api";
 import React, { useEffect, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/ru";
-
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import styles from "./calendar.module.scss";
 
 const transformData = (data: any) => {
   if (!data) {
@@ -56,7 +55,14 @@ const transformData = (data: any) => {
   return Array.from(map.values());
 };
 
-const generateTable = (startData: Dayjs, endData: Dayjs) => {
+const generateTable = (startData: Dayjs | null, endData: Dayjs | null) => {
+    
+  if (!startData || !endData) {
+    return [];
+  }
+
+  console.log(startData, endData)
+
   dayjs.locale("ru");
   const differenceInDays: number = endData.diff(startData, "day");
 
@@ -64,7 +70,7 @@ const generateTable = (startData: Dayjs, endData: Dayjs) => {
     { field: "Name", headerName: "ФИО", width: 160 },
   ];
 
-  for (let numberDay = 0; numberDay < differenceInDays; numberDay++) {
+  for (let numberDay = 0; numberDay < differenceInDays + 1; numberDay++) {
     const nextDate = startData.add(numberDay, "day");
 
     const column = {
@@ -84,12 +90,16 @@ const generateTable = (startData: Dayjs, endData: Dayjs) => {
 
 const Calendar = () => {
   const [columns, setColumns] = useState<GridColDef[]>([]);
+  const [startData, setStartData] = React.useState<Dayjs | null>(dayjs());
+  const [endData, setEndData] = React.useState<Dayjs | null>(
+    dayjs().add(7, "day")
+  );
 
   const { data } = useGetIntervalsQuery();
   const newData = transformData(data);
 
   useEffect(() => {
-    setColumns(generateTable(dayjs("2024-04-28"), dayjs("2024-05-06")));
+    setColumns(generateTable(startData, endData));
   }, []);
 
   const rootStyles = {
@@ -100,16 +110,45 @@ const Calendar = () => {
   };
 
   return (
-    <Box sx={rootStyles}>
-      <DataGrid
-        rows={newData}
-        columns={columns}
-        disableRowSelectionOnClick
-        hideFooter
-        showCellVerticalBorder
-        showColumnVerticalBorder
-      />
-    </Box>
+    <div>
+      <div className={styles.inputContainer}>
+        <div className={styles.inputData}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Дата начала интервала"
+              value={startData}
+              onChange={(newValue) => {
+                setStartData(newValue);
+                setColumns(generateTable(newValue, endData));
+              }}
+            />
+          </LocalizationProvider>
+        </div>
+        <div className={styles.inputData}>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Дата конца интервала"
+              value={endData}
+              onChange={(newValue) => {
+                setEndData(newValue);
+                setColumns(generateTable(startData, newValue));
+              }}
+            />
+          </LocalizationProvider>
+        </div>
+      </div>
+
+      <Box sx={rootStyles}>
+        <DataGrid
+          rows={newData}
+          columns={columns}
+          disableRowSelectionOnClick
+          hideFooter
+          showCellVerticalBorder
+          showColumnVerticalBorder
+        />
+      </Box>
+    </div>
   );
 };
 
