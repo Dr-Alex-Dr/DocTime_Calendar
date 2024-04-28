@@ -1,8 +1,6 @@
 import {DataGrid, GridColDef, GridRenderCellParams, GridRowsProp} from '@mui/x-data-grid';
 import Box from '@mui/material/Box';
-import { Cell } from './components/cell/Cell';
-import { heIL } from '@mui/material/locale';
-import './app/styles/style.scss';
+import { Cell } from '../components/cell/Cell';
 
 
 const rows: GridRowsProp = [
@@ -142,8 +140,7 @@ const rootStyles = {
     },
 };
 
-function App() {
-
+const Calendar = () => {
   return (
       <Box sx={rootStyles}>
         <DataGrid
@@ -158,4 +155,4 @@ function App() {
   );
 }
 
-export default App;
+export { Calendar };
