@@ -12,8 +12,13 @@
     padding-top: 1px;
     margin-right: 8px;
     color: #006cbf;
+    display: none;
 
     &:hover {
         background-color: #eafbff;
     }
+}
+
+.active {
+    display: block;
 }
