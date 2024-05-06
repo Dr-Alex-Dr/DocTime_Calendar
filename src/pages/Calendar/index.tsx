@@ -16,22 +16,16 @@ const transformData = (data: any) => {
   }
 
   const formatData = (workDataObj: any, item: any) => {
-    workDataObj.id = item.doctor_id;
-    workDataObj.Name = item.doctor;
+    workDataObj.id = item.doctor.id;
+    workDataObj.Name = item.doctor.first_name;
 
-    const start = new Date(item.start * 1000);
-    const end = new Date(item.end * 1000);
+    const start: string = item.start.split("T")[1].split(":");
+    const end: string = item.end.split("T")[1].split(":");
 
-    const formatDate = (date: Date): string => {
-      return `${("0" + date.getHours()).slice(-2)}:${(
-        "0" + date.getMinutes()
-      ).slice(-2)}`;
-    };
+    const workData = item.start.split('T')[0];
 
-    const workData = start.toISOString().slice(0, 10);
-    const workTimeString = `${formatDate(start)}-${formatDate(end)} ${
-      item.cabinet
-    }`;
+    const workTimeString: string = `${start[0]}:${start[1]}-${end[0]}:${end[1]} ${item.cabinet.number}`;
+
 
     workDataObj[workData] = workTimeString;
   };
@@ -39,16 +33,16 @@ const transformData = (data: any) => {
   const map = new Map();
 
   for (let item of data) {
-    if (map.has(item.doctor_id)) {
-      const workDataObj = map.get(item.doctor_id);
+    if (map.has(item.doctor.id)) {
+      const workDataObj = map.get(item.doctor.id);
 
       formatData(workDataObj, item);
-      map.set(item.doctor_id, workDataObj);
+      map.set(item.doctor.id, workDataObj);
     } else {
       const workDataObj: any = {};
 
       formatData(workDataObj, item);
-      map.set(item.doctor_id, workDataObj);
+      map.set(item.doctor.id, workDataObj);
     }
   }
 
@@ -96,6 +90,7 @@ const Calendar = () => {
   );
 
   const { data } = useGetIntervalsQuery();
+  console.log(data)
   const newData = transformData(data);
 
   useEffect(() => {
