@@ -17,14 +17,14 @@ const transformData = (data: any) => {
 
   const formatData = (workDataObj: any, item: any) => {
     workDataObj.id = item.doctor.id;
-    workDataObj.Name = item.doctor.first_name;
+    workDataObj.Name = item.doctor.first_name + ' ' + item.doctor.last_name[0] + '.' + item.doctor.father_name[0];
 
     const start: string = item.start.split("T")[1].split(":");
     const end: string = item.end.split("T")[1].split(":");
 
     const workData = item.start.split('T')[0];
 
-    const workTimeString: string = `${start[0]}:${start[1]}-${end[0]}:${end[1]} ${item.cabinet.number}`;
+    const workTimeString: string = `${start[0]}:${start[1]}-${end[0]}:${end[1]} ${item.cabinet ? item.cabinet.number : '-'}`;
 
 
     workDataObj[workData] = workTimeString;
