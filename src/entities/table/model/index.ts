@@ -1,1 +1,1 @@
-export * from './workTime';
+export * from './intervals';

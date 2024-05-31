@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { IDoctor } from '../model';
+import { IInterval } from '../model';
 
 // const BASE_URL = "http://localhost:8010/proxy/api/v1/";
 const BASE_URL = "https://redrock.mycum.ru/api/v1";
@@ -11,7 +11,7 @@ export const api = createApi({
         baseUrl: BASE_URL
     }),
     endpoints: (builder) => ({
-        getIntervals: builder.query<any, void>({
+        getIntervals: builder.query<IInterval[], void>({
             query: () => '/intervals'
         }),
     })
