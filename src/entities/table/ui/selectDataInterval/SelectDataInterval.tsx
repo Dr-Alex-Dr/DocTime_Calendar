@@ -13,7 +13,7 @@ const SelectDataInterval = (props: ISelectDataIntervalProps) => {
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
                     label={props.label}
-                    value={props.type === 'start' ? props.startData : props.endData}
+                    value={props.type === 'start' ? props.startDate : props.endDate}
                     onChange={(value: Dayjs | null) => {props.handleDateChange(value, props.type)}}
                     />
                 </LocalizationProvider>
@@ -21,7 +21,6 @@ const SelectDataInterval = (props: ISelectDataIntervalProps) => {
         </div>
     )
 }
-
 
 export { SelectDataInterval };
 

@@ -10,14 +10,15 @@ export interface IDoctor {
     last_name: string;
     father_name: string;
     priority_cabinet: string;
-    cabinet: ICabinet;
+    cabinets: ICabinet[];
 }
 
 export interface IInterval {
     start: string;
     end: string;
+    cabinet: ICabinet;
     doctor: IDoctor;
-    cabinets: ICabinet[];
+    id?: string;
 }
 
 export interface ICell {

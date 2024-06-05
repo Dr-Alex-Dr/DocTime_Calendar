@@ -4,32 +4,32 @@ import { Cell } from "../../../entities/table";
 import { GridRenderCellParams } from "@mui/x-data-grid";
 
 
-export const GenerateTable = (startData: Dayjs | null, endData: Dayjs | null): IColumn[] | [] => {  
-    if (!startData || !endData) {
+export const GenerateTable = (startDate: Dayjs | null, endDate: Dayjs | null): IColumn[] | [] => {  
+    if (!startDate || !endDate) {
       return [];
     }
   
-    dayjs.locale("ru");
-    const differenceInDays: number = endData.diff(startData, "day");
+    const differenceInDays: number = endDate.diff(startDate, "day");
   
     const newColumns: IColumn[] = [
       { field: "Name", headerName: "ФИО", width: 160 },
     ];
-  
+
+
     for (let numberDay = 0; numberDay < differenceInDays + 1; numberDay++) {
-      const nextDate = startData.add(numberDay, "day");
-  
+      const nextDate = startDate.add(numberDay, "day");
+        dayjs.locale("ru");
       const column = {
         field: nextDate.format("YYYY-MM-DD"),
         headerName: nextDate.format("dd D"),
         width: (window.screen.width - 160) / 8,
         cellClassName: "cell",
-        renderCell: (params: GridRenderCellParams<any, string>) => (
+        renderCell: (params: GridRenderCellParams<any, any>) => (
           <Cell params={params.value || ""}></Cell>
         ),
       };
       newColumns.push(column);
     }
-  
+
     return newColumns;
   };

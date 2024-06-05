@@ -1,8 +1,12 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import { api } from "../../entities/table/api/api";
+import cabinetsSlice from "../../entities/table/lib/cabinetsSlice";
+import intervalSlice from "../../entities/table/lib/intervalSlice";
 
 const reducers = combineReducers({
-    [api.reducerPath]: api.reducer
+    [api.reducerPath]: api.reducer,
+    cabinets: cabinetsSlice,
+    intervals: intervalSlice,
 })
 
 export const store = configureStore({
@@ -10,7 +14,4 @@ export const store = configureStore({
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware().concat(api.middleware),
 }) 
-
-export type RootState = ReturnType<typeof store.getState>
-export type AppDispatch = typeof store.dispatch
 
