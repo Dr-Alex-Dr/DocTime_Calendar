@@ -7,7 +7,7 @@ import TextField from '@mui/material/TextField';
 import styles from './EditIntervalForm.module.scss';
 import {ICabinet, IInterval} from "../../model";
 import {useAppSelector, useAppDispatch} from "../../../../shared/lib/store/redux";
-import {setInterval, closeForm} from "../../lib/intervalSlice";
+import {closeForm, setInterval} from "../../lib/intervalSlice";
 import Autocomplete from '@mui/material/Autocomplete';
 import {getInterval} from "../../lib/getInterval";
 import dayjs from 'dayjs';
@@ -25,23 +25,25 @@ export const EditIntervalForm = () => {
     const cabinets = useAppSelector<ICabinet[]>((state) => state.cabinets.items);
     const isOpen = useAppSelector<boolean>((state) => state.intervals.isOpenFormEdit);
 
+
+
     const interval: IInterval | undefined = intervals.find((interval) => interval?.id === intervalId);
     const formatInterval: string = getInterval(interval)
 
 
     const setData = () => {
+        
         if (interval) {
             const newInterval = { ...interval }
 
             newInterval.start = startInterval;
             newInterval.end = endInterval;
 
-
             if (workCabinet) {
                 newInterval.cabinet = workCabinet;
             }
-
-            console.log(newInterval, intervalId)
+     
+           
             dispatch(setInterval(newInterval))
         }
 

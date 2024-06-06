@@ -31,5 +31,6 @@ export const GenerateTable = (startDate: Dayjs | null, endDate: Dayjs | null): I
       newColumns.push(column);
     }
 
+   
     return newColumns;
   };

@@ -3,10 +3,12 @@ import {IInterval} from "../model";
 import { v4 as uuidv4 } from 'uuid';
 import axios from "axios";
 import {baseUrl} from "../../../shared/const/url";
+import { ITransformSchedule } from '../../../pages/Calendar/model/types';
 
 
 const initialState = {
     intervals: [] as IInterval[],
+    transformSchedule: [] as ITransformSchedule[],
     intervalId: '',
     isOpenFormEdit: false,
     status: 'idle',
@@ -23,6 +25,14 @@ const intervalSlice = createSlice({
     name: 'intervals',
     initialState: initialState,
     reducers: {
+        setIntervalD: (state, action) => {
+            state.intervals = state.intervals.map((interval) => {
+                if (interval.id === action.payload.id) {
+                    return action.payload;
+                }
+                return interval;
+            });
+        },
         setInterval: (state, action) => {
             state.intervals = state.intervals.map((interval) => {
                 if (interval.id === action.payload.id) {
@@ -30,8 +40,6 @@ const intervalSlice = createSlice({
                 }
                 return interval;
             });
-
-            // state.intervals = action.payload;
         },
         setIntervalId: (state, action) => {
             state.intervalId = action.payload;
@@ -59,8 +67,9 @@ const intervalSlice = createSlice({
             } else {
                 state.intervals = [...state.intervals, action.payload]
             }
-
-
+        },
+        updateIntervals: (state, action) => {
+            state.intervals = [...action.payload]
         },
         openForm: (state) => {
             state.isOpenFormEdit = true;
@@ -76,12 +85,7 @@ const intervalSlice = createSlice({
             })
             .addCase(getIntervals.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                state.intervals = action.payload.map((interval: IInterval) => {
-                    const newInterval: IInterval = {...interval}
-                    newInterval.id = uuidv4();
-
-                    return newInterval
-                })
+                state.intervals = action.payload;
             })
             .addCase(getIntervals.rejected, (state, action) => {
                 state.status = 'failed';
@@ -91,5 +95,5 @@ const intervalSlice = createSlice({
 
 });
 
-export const { setIntervals, setInterval, addInterval, openForm, closeForm, setIntervalId } = intervalSlice.actions;
+export const { setIntervals, setIntervalD, addInterval, openForm, closeForm, setIntervalId, updateIntervals, setInterval } = intervalSlice.actions;
 export default intervalSlice.reducer;

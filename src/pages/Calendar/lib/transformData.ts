@@ -1,66 +1,69 @@
+import { Interface } from "readline";
 import { IInterval } from "../../../entities/table/model";
 import { ITransformSchedule } from "../model/types";
 import dayjs, { Dayjs } from "dayjs";
-import {GridRenderCellParams} from "@mui/x-data-grid";
-import {Cell} from "../../../entities/table";
 import {v4 as uuidv4} from "uuid";
+import { ITransformDataProps } from "../model/types";
 
-export const TransformData = (intervals: IInterval[], startDate: Dayjs | null, endDate: Dayjs | null): ITransformSchedule[] => {
+
+export const TransformData = (intervals: IInterval[], startDate: Dayjs | null, endDate: Dayjs | null): ITransformDataProps => {
     if (!intervals) {
-        return [];
+        return {
+            transformSchedule: [],
+            completionSchedule: []
+        }
     }
 
     if (!startDate || !endDate) {
-       return []
+        return {
+            transformSchedule: [],
+            completionSchedule: []
+        }
     }
 
     const differenceInDays: number = endDate.diff(startDate, "day");
 
-    const formatData = (workDataObj: ITransformSchedule, item: IInterval) => {
+    const formatData = (workDataObj: ITransformSchedule, interval: IInterval) => {    
+        const newInterval = { ...interval, id: uuidv4() };
+        
+        workDataObj.id = newInterval.doctor.id;
+        workDataObj.Name = newInterval.doctor.first_name + ' ' + newInterval.doctor.last_name[0] + '.' + newInterval.doctor.father_name[0];
 
-        workDataObj.id = item.doctor.id;
-        workDataObj.Name = item.doctor.first_name + ' ' + item.doctor.last_name[0] + '.' + item.doctor.father_name[0];
-
-        const date: string = item.start.split('T')[0];
-
-        workDataObj[date] = item;
-
+        const date: string = newInterval.start.split('T')[0];
+        workDataObj[date] = newInterval;
     };
-
-    const map = new Map();
-
 
     const generateBlank = (interval: IInterval) => {
         const datesObj: any = {}
-        let id = uuidv4()
-        const blankInterval: any = { ...interval }
-        blankInterval.end = '';
-        blankInterval.start = '';
-        blankInterval.cabinet = null;
-        blankInterval.id = id;
-
+    
         for (let numberDay = 0; numberDay < differenceInDays + 1; numberDay++) {
-            id = uuidv4();
-            const nextDate = startDate.add(numberDay, "day");
-            const date = nextDate.format("YYYY-MM-DD");
-            blankInterval.end = `${interval?.end.split('T')[0]}T00:00:00`;
-            blankInterval.start = `${interval?.start.split('T')[0]}T00:00:00`;
-
-            datesObj[date] = blankInterval;
+            const nextDate = startDate.add(numberDay, "day").format("YYYY-MM-DD");
+            const newData = {
+                ...interval,
+                cabinet: null,
+                start: `${nextDate}T00:00:00`,
+                end: `${nextDate}T00:00:00`,
+                id: uuidv4(),
+            };
+            datesObj[nextDate] = newData;
+           
         }
 
+       
         return datesObj
     }
 
-    for (let interval of intervals) {
+    const map = new Map();
 
+    for (let interval of intervals) {
         if (map.has(interval.doctor.id)) {
-            const workDataObj = map.get(interval.doctor.id);
+            const workDataObj = {...map.get(interval.doctor.id)};
 
             formatData(workDataObj, interval);
             map.set(interval.doctor.id, workDataObj);
         } else {
             const workDataObj: any = {...generateBlank(interval)};
+            
 
             formatData(workDataObj, interval);
             map.set(interval.doctor.id, workDataObj);
@@ -68,5 +71,23 @@ export const TransformData = (intervals: IInterval[], startDate: Dayjs | null, e
     }
 
 
-    return Array.from(map.values());
+    function isValidDate(dateString: string) {
+        return !isNaN(Date.parse(dateString));
+    }
+
+    const resultArray: IInterval[] = []
+    
+    for (let interval of Array.from(map.values())) {
+        for (let key in interval) {
+            if (interval.hasOwnProperty(key) && isValidDate(key)) {
+                resultArray.push(interval[key])
+            }
+        }
+    }
+
+
+    return {
+        transformSchedule: Array.from(map.values()),
+        completionSchedule: resultArray
+    }
 };

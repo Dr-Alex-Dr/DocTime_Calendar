@@ -12,7 +12,7 @@
     padding-top: 1px;
     margin-right: 8px;
     color: #006cbf;
-
+    opacity: 0;
     &:hover {
         background-color: #eafbff;
     }
@@ -23,8 +23,7 @@
     height: 100%;
 }
 
-
-
 .active {
     display: block;
+    opacity: 1;
 }

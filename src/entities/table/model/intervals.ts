@@ -19,6 +19,7 @@ export interface IInterval {
     cabinet: ICabinet;
     doctor: IDoctor;
     id?: string;
+    modified?: boolean;
 }
 
 export interface ICell {
