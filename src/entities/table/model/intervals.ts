@@ -26,3 +26,9 @@ export interface ICell {
     interval: string,
     cabinet: number
 }
+
+export interface ISchdule {
+    id: string,
+    name: string,
+    description: string
+}

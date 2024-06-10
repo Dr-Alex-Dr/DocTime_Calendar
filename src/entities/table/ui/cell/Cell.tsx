@@ -10,7 +10,6 @@ import {getInterval} from "../../lib/getInterval";
 
 const Cell = ({params}: IInterval | any): React.ReactElement => {
     const dispatch = useAppDispatch();
-    console.log(params)
 
     const getCabinet = (): string => {
         return params?.cabinet?.number || '-';

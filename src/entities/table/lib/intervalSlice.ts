@@ -25,14 +25,6 @@ const intervalSlice = createSlice({
     name: 'intervals',
     initialState: initialState,
     reducers: {
-        setIntervalD: (state, action) => {
-            state.intervals = state.intervals.map((interval) => {
-                if (interval.id === action.payload.id) {
-                    return action.payload;
-                }
-                return interval;
-            });
-        },
         setInterval: (state, action) => {
             state.intervals = state.intervals.map((interval) => {
                 if (interval.id === action.payload.id) {
@@ -43,16 +35,6 @@ const intervalSlice = createSlice({
         },
         setIntervalId: (state, action) => {
             state.intervalId = action.payload;
-        },
-        setIntervals: (state, action) => {
-            if (action.payload) {
-                state.intervals = action.payload.map((interval: IInterval) => {
-                    const newInterval: IInterval = { ... interval }
-                    newInterval.id = uuidv4();
-
-                    return newInterval
-                })
-            }
         },
         addInterval: (state, action) => {
             const isExist = state.intervals.some(interval => interval.id === action.payload.id);
@@ -95,5 +77,5 @@ const intervalSlice = createSlice({
 
 });
 
-export const { setIntervals, setIntervalD, addInterval, openForm, closeForm, setIntervalId, updateIntervals, setInterval } = intervalSlice.actions;
+export const { addInterval, openForm, closeForm, setIntervalId, updateIntervals, setInterval } = intervalSlice.actions;
 export default intervalSlice.reducer;

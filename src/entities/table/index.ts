@@ -1,3 +1,4 @@
 export * from './ui/cell/Cell';
-export * from './ui/addUserForm/AddUserForm';
+export * from './ui/AddScheduleForm/AddScheduleForm';
 export * from './ui/selectDataInterval/SelectDataInterval';
+export * from './ui/SelectSchedule/SelectSchedule';

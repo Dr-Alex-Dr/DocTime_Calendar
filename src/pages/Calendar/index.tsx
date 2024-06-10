@@ -1,10 +1,8 @@
 import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import Box from "@mui/material/Box";
-import { useGetIntervalsQuery } from "../../entities/table/api/api";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import "dayjs/locale/ru";
-import { AddUserForm } from "../../entities/table";
 import styles from "./calendar.module.scss";
 import { SelectDataInterval } from "../../entities/table";
 import { TransformData } from "./lib/transformData";
@@ -13,12 +11,14 @@ import { ITransformSchedule } from "./model/types";
 import { EditIntervalForm } from "../../entities/table/ui/editIntervalForm/editIntervalForm";
 import { useAppDispatch, useAppSelector  } from "../../shared/lib/store/redux";
 import { getCabinets } from "../../entities/table/lib/cabinetsSlice";
-import {addInterval, setIntervalD, setIntervals, updateIntervals} from "../../entities/table/lib/intervalSlice";
+import {addInterval, updateIntervals} from "../../entities/table/lib/intervalSlice";
 import {IInterval} from "../../entities/table/model";
 import {getIntervals} from "../../entities/table/lib/intervalSlice";
 import {v4 as uuidv4} from "uuid";
 import { compareIntervals } from "./lib/compareIntervals";
 import CircularProgress from '@mui/material/CircularProgress';
+import { AddScheduleForm } from "../../entities/table";
+import { SelectSchedule } from "../../entities/table";
 
 const Calendar = () => {
   const [startDate, setStartDate] = useState<Dayjs | null>(dayjs());
@@ -35,6 +35,16 @@ const Calendar = () => {
 
   const previousIntervals = useRef<IInterval[]>(intervals);
 
+  const updateData = () => {
+    const transforData = TransformData(intervals, startDate, endDate)
+    const newData: ITransformSchedule[] = transforData.transformSchedule;
+    const newInterval: IInterval[] = transforData.completionSchedule;
+
+    dispatch(updateIntervals(newInterval))
+    setFormatData(newData)
+    previousIntervals.current = intervals;
+  }
+
   useEffect(() => {
     dispatch(getCabinets());
     dispatch(getIntervals());
@@ -43,24 +53,12 @@ const Calendar = () => {
 
   useEffect(() => {
     if (!compareIntervals(previousIntervals.current, intervals)) {
-      const transforData = TransformData(intervals, startDate, endDate)
-      const newData: ITransformSchedule[] = transforData.transformSchedule;
-      const newInterval: IInterval[] = transforData.completionSchedule;
-
-      dispatch(updateIntervals(newInterval))
-      setFormatData(newData)
-      previousIntervals.current = intervals;
+      updateData()
     }
   },  [intervals, startDate, endDate])
 
   useEffect(() => {
-      const transforData = TransformData(intervals, startDate, endDate)
-      const newData: ITransformSchedule[] = transforData.transformSchedule;
-      const newInterval: IInterval[] = transforData.completionSchedule;
-
-      dispatch(updateIntervals(newInterval))
-      setFormatData(newData)
-      previousIntervals.current = intervals;
+    updateData()
   },  [startDate, endDate])
 
   useEffect(() => {
@@ -123,7 +121,8 @@ const Calendar = () => {
                   endDate={endDate}
                   handleDateChange={handleDateChange}
               />
-              <AddUserForm/>
+              <SelectSchedule />
+              <AddScheduleForm/>
 
             </div>
 
@@ -137,7 +136,6 @@ const Calendar = () => {
                   showColumnVerticalBorder
               />
             </Box>
-
             <EditIntervalForm />
           </div>
   );
