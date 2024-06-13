@@ -14,9 +14,13 @@ export const addSchedule = createAsyncThunk<ISchdule, string>('doctors/addSchedu
     const response = await axios.post(`${baseUrl}/schedules/`, {
       name: ScheduleName,
       description: ScheduleName
+    }, {
+      headers: {
+        'Content-Type': 'Accept: application/json'
+      }
     })
 
-    return response?.data
+    return response?.data;
 });
 
 const schedulesSlice = createSlice({
@@ -25,8 +29,13 @@ const schedulesSlice = createSlice({
     items: [] as ISchdule[],
     status: 'idle',
     error: null as string | null,
+    currentSchedule: {} as ISchdule
   },
-  reducers: {},
+  reducers: {
+    setSchedule: (state, action) => {
+      state.currentSchedule = action.payload;
+    }
+  },
   extraReducers: builder => {
     builder
         .addCase(getSchedules.pending, state => {
@@ -56,5 +65,6 @@ const schedulesSlice = createSlice({
   },
 });
 
+export const { setSchedule } = schedulesSlice.actions;
 export default schedulesSlice.reducer;
 

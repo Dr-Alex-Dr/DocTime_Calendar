@@ -29,6 +29,7 @@ const Calendar = () => {
 
   const dispatch = useAppDispatch();
 
+  const currentSchedule = useAppSelector((state) => state.schedules.currentSchedule)
   const intervals = useAppSelector((state) => state.intervals.intervals);
   const status = useAppSelector((state) => state.intervals.status);
   const error = useAppSelector((state) => state.intervals.error);
@@ -60,6 +61,11 @@ const Calendar = () => {
   useEffect(() => {
     updateData()
   },  [startDate, endDate])
+
+  // useEffect(() => {
+  //   updateData()
+  //   console.log(currentSchedule)
+  // }, [currentSchedule])
 
   useEffect(() => {
     setColumns(GenerateTable(startDate, endDate));
