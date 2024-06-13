@@ -1,12 +1,14 @@
 import { Interface } from "readline";
-import { IInterval } from "../../../entities/table/model";
+import { IInterval, ISchdule, } from "../../../entities/table/model";
 import { ITransformSchedule } from "../model/types";
 import dayjs, { Dayjs } from "dayjs";
 import {v4 as uuidv4} from "uuid";
 import { ITransformDataProps } from "../model/types";
 
 
-export const TransformData = (intervals: IInterval[], startDate: Dayjs | null, endDate: Dayjs | null): ITransformDataProps => {
+export const TransformData = (intervals: IInterval[], startDate: Dayjs | null, endDate: Dayjs | null, currentSchedule: ISchdule): ITransformDataProps => {
+    console.log(intervals)
+    
     if (!intervals) {
         return {
             transformSchedule: [],
@@ -20,6 +22,7 @@ export const TransformData = (intervals: IInterval[], startDate: Dayjs | null, e
             completionSchedule: []
         }
     }
+
 
     const differenceInDays: number = endDate.diff(startDate, "day");
 
@@ -43,6 +46,7 @@ export const TransformData = (intervals: IInterval[], startDate: Dayjs | null, e
                 cabinet: null,
                 start: `${nextDate}T00:00:00`,
                 end: `${nextDate}T00:00:00`,
+                schedule: currentSchedule,
                 id: uuidv4(),
             };
             datesObj[nextDate] = newData;

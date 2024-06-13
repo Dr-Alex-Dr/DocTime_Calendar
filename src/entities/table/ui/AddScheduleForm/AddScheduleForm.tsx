@@ -66,7 +66,7 @@ const AddScheduleForm = (): React.ReactElement => {
   
     return (
       <div>
-        <Button onClick={handleOpen}>Open modal</Button>
+        <Button onClick={handleOpen}>Создать расписание</Button>
         <Modal
           open={open}
           onClose={handleClose}

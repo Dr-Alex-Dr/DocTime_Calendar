@@ -55,7 +55,6 @@ const schedulesSlice = createSlice({
         })
         .addCase(addSchedule.fulfilled, (state, action) => {
             state.status = 'succeeded';
-            console.log(action.payload);
             state.items.push(action.payload);
         })
         .addCase(addSchedule.rejected, (state, action) => {

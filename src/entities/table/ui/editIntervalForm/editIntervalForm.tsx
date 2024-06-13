@@ -7,7 +7,7 @@ import TextField from '@mui/material/TextField';
 import styles from './EditIntervalForm.module.scss';
 import {ICabinet, IInterval} from "../../model";
 import {useAppSelector, useAppDispatch} from "../../../../shared/lib/store/redux";
-import {closeForm, setInterval} from "../../lib/intervalSlice";
+import {closeForm, setInterval, addInterval} from "../../lib/intervalSlice";
 import Autocomplete from '@mui/material/Autocomplete';
 import {getInterval} from "../../lib/getInterval";
 import dayjs from 'dayjs';
@@ -43,8 +43,7 @@ export const EditIntervalForm = () => {
                 newInterval.cabinet = workCabinet;
             }
      
-           
-            dispatch(setInterval(newInterval))
+            dispatch(addInterval(newInterval))
         }
 
         dispatch(closeForm())
@@ -83,6 +82,7 @@ const style = {
       <Box sx={style} role="presentation">
           {interval ? <h2 className={styles.title}>{interval?.doctor?.first_name} {interval?.doctor?.last_name} {interval?.doctor?.father_name}</h2> : ''}
           {interval ? <h2 className={styles.date}>{dayjs(interval?.start).format('D MMMM')}</h2> : ''}
+          {interval ? <h2>{interval?.schedule?.name || '-'}</h2> : ''}
           <TextField
               className={styles.editInput}
               placeholder="15:00-17:00"

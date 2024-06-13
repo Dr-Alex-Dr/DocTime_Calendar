@@ -37,14 +37,21 @@ const Calendar = () => {
   const previousIntervals = useRef<IInterval[]>(intervals);
 
   const updateData = () => {
-    const transforData = TransformData(intervals, startDate, endDate)
-    const newData: ITransformSchedule[] = transforData.transformSchedule;
-    const newInterval: IInterval[] = transforData.completionSchedule;
+    if (currentSchedule) {
+      const transforData = TransformData(intervals, startDate, endDate, currentSchedule)
+      const newData: ITransformSchedule[] = transforData.transformSchedule;
+      const newInterval: IInterval[] = transforData.completionSchedule;
 
-    dispatch(updateIntervals(newInterval))
-    setFormatData(newData)
-    previousIntervals.current = intervals;
+      dispatch(updateIntervals(newInterval))
+      setFormatData(newData)
+      previousIntervals.current = intervals;
+    }
   }
+
+  // const filterSchedule = () => {
+  //   const filterSchedule: IInterval[] = intervals.filter((schedule) => schedule.schedule.id === currentSchedule.id)
+  //   console.log(filterSchedule)
+  // }
 
   useEffect(() => {
     dispatch(getCabinets());
@@ -62,10 +69,9 @@ const Calendar = () => {
     updateData()
   },  [startDate, endDate])
 
-  // useEffect(() => {
-  //   updateData()
-  //   console.log(currentSchedule)
-  // }, [currentSchedule])
+  useEffect(() => {
+    updateData()
+  }, [currentSchedule])
 
   useEffect(() => {
     setColumns(GenerateTable(startDate, endDate));

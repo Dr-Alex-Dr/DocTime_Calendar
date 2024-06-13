@@ -18,8 +18,8 @@ export interface IInterval {
     end: string;
     cabinet: ICabinet;
     doctor: IDoctor;
+    schedule: ISchdule;
     id?: string;
-    modified?: boolean;
 }
 
 export interface ICell {
