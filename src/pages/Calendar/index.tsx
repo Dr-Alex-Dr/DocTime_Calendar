@@ -42,8 +42,14 @@ const Calendar = () => {
       const newData: ITransformSchedule[] = transforData.transformSchedule;
       const newInterval: IInterval[] = transforData.completionSchedule;
 
-      dispatch(updateIntervals(newInterval))
-      setFormatData(newData)
+      dispatch(updateIntervals(newInterval));
+
+      const transforData2 = TransformData(newInterval, startDate, endDate, currentSchedule, true)
+      const newData2: ITransformSchedule[] = transforData2.transformSchedule;
+      const newInterval2: IInterval[] = transforData2.completionSchedule;
+
+  
+      setFormatData(newData2)
       previousIntervals.current = intervals;
     }
   }

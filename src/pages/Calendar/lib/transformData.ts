@@ -6,8 +6,10 @@ import {v4 as uuidv4} from "uuid";
 import { ITransformDataProps } from "../model/types";
 
 
-export const TransformData = (intervals: IInterval[], startDate: Dayjs | null, endDate: Dayjs | null, currentSchedule: ISchdule): ITransformDataProps => {
-    console.log(intervals)
+export const TransformData = (intervals: IInterval[], startDate: Dayjs | null, endDate: Dayjs | null, currentSchedule: ISchdule, flag = false): ITransformDataProps => {
+    if (flag) {
+        intervals = intervals.filter((schedule) => schedule.schedule.id === currentSchedule.id)
+    }
     
     if (!intervals) {
         return {
@@ -49,8 +51,7 @@ export const TransformData = (intervals: IInterval[], startDate: Dayjs | null, e
                 schedule: currentSchedule,
                 id: uuidv4(),
             };
-            datesObj[nextDate] = newData;
-           
+            datesObj[nextDate] = newData;   
         }
 
        
