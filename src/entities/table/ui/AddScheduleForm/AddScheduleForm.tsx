@@ -37,7 +37,8 @@ const AddScheduleForm = (): React.ReactElement => {
     const doctors: IDoctor[] = useAppSelector((state) => state.doctors.items);
 
     const handleSendForm = () => {
-      dispatch(addSchedule(nameInput))
+      dispatch(addSchedule(nameInput));
+      setOpen(false);
     }
 
     const handleInputName = (event: ChangeEvent<HTMLInputElement>) => {
@@ -66,7 +67,7 @@ const AddScheduleForm = (): React.ReactElement => {
   
     return (
       <div>
-        <Button onClick={handleOpen}>Создать расписание</Button>
+        <Button onClick={handleOpen} className={styles.Button}>Создать расписание</Button>
         <Modal
           open={open}
           onClose={handleClose}

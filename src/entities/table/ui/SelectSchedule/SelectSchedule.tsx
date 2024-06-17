@@ -30,10 +30,8 @@ const SelectSchedule = () => {
     return (
         <div>
             <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={schedule?.id || ''}
                 label="Выберите расписание"
+                value={schedule?.id || ''}
                 onChange={handleChange}             
             >
                 {schedules && schedules.map((item: ISchdule) => (

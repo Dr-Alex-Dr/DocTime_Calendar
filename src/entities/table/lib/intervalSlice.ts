@@ -16,9 +16,45 @@ const initialState = {
 };
 
 export const getIntervals = createAsyncThunk<IInterval[]>('intervals/getInterval', async () => {
-    const response = await axios.get(`${baseUrl}/intervals`)
+    const response = await axios.get(`${baseUrl}/intervals/`)
 
     return response?.data
+})
+
+export const addIntervals = createAsyncThunk<IInterval, any>('intervals/addInterval', async (newInterval) => {
+    const response = await axios.post(`${baseUrl}/intervals/`, {
+        start: newInterval.start,
+        end: newInterval.end,
+        doctor_id: newInterval.doctor.id,
+        schedule_id: newInterval.schedule.id
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+  
+      return response?.data;
+});
+
+export const updateInterval = createAsyncThunk<IInterval, any>('intervals/updateInterval', async (newInterval) => {
+    const response = await axios.put(`${baseUrl}/intervals/${newInterval.id}`, {
+        start: newInterval.start,
+        end: newInterval.end,
+        doctor_id: newInterval.doctor.id,
+        schedule_id: newInterval.schedule.id
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+  
+      return response?.data;
+})
+
+export const deleteInterval = createAsyncThunk<any, any>('intervals/deleteInterval', async (newInterval) => {
+    await axios.delete(`${baseUrl}/intervals/${newInterval.id}`)
+  
+    return newInterval.id;  
 })
 
 const intervalSlice = createSlice({
@@ -72,7 +108,69 @@ const intervalSlice = createSlice({
             .addCase(getIntervals.rejected, (state, action) => {
                 state.status = 'failed';
                 state.error = action.error.message || 'Failed to fetch cabinets';
-            });
+            })
+
+            .addCase(addIntervals.pending, state => {
+                state.status = 'loading';
+            })
+            .addCase(addIntervals.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+
+                const isExist = state.intervals.some(interval => interval.id === action.payload.id);
+
+                if (isExist) {
+                    state.intervals = state.intervals.map((interval) => {
+                        if (interval.id === action.payload.id) {
+                            return action.payload;
+                        }
+                        return interval;
+                    });
+                } else {
+                    state.intervals = [...state.intervals, action.payload]
+                }
+            })
+            .addCase(addIntervals.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message || 'Failed to fetch cabinets';
+            })
+
+            .addCase(deleteInterval.pending, state => {
+                state.status = 'loading';
+            })
+            .addCase(deleteInterval.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                const filterArray = state.intervals.filter(interval => interval.id !== action.payload);
+                state.intervals = [...filterArray];
+                
+            })
+            .addCase(deleteInterval.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message || 'Failed to fetch cabinets';
+            })
+
+            .addCase(updateInterval.pending, state => {
+                state.status = 'loading';
+            })
+            .addCase(updateInterval.fulfilled, (state, action) => {
+                state.status = 'succeeded';
+                
+                const isExist = state.intervals.some(interval => interval.id === action.payload.id);
+
+                if (isExist) {
+                    state.intervals = state.intervals.map((interval) => {
+                        if (interval.id === action.payload.id) {
+                            return action.payload;
+                        }
+                        return interval;
+                    });
+                } else {
+                    state.intervals = [...state.intervals, action.payload]
+                }
+            })
+            .addCase(updateInterval.rejected, (state, action) => {
+                state.status = 'failed';
+                state.error = action.error.message || 'Failed to fetch cabinets';
+            })
     }
 
 });

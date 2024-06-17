@@ -1,6 +1,6 @@
 .editInput {
-    margin-bottom: 20px;
-    margin-top: 20px;
+    margin-bottom: 20px !important;
+   
     width: 100%;
 }
 
@@ -22,5 +22,10 @@
 }
 
 .button {
+    width: 100%;
+    margin-bottom: 15px !important;
+}
+
+.buttonContainer {
     width: 100%;
 }

@@ -6,11 +6,7 @@ import {v4 as uuidv4} from "uuid";
 import { ITransformDataProps } from "../model/types";
 
 
-export const TransformData = (intervals: IInterval[], startDate: Dayjs | null, endDate: Dayjs | null, currentSchedule: ISchdule, flag = false): ITransformDataProps => {
-    if (flag) {
-        intervals = intervals.filter((schedule) => schedule.schedule.id === currentSchedule.id)
-    }
-    
+export const TransformData = (intervals: IInterval[], startDate: Dayjs | null, endDate: Dayjs | null, currentSchedule: ISchdule): ITransformDataProps => {
     if (!intervals) {
         return {
             transformSchedule: [],
@@ -28,8 +24,13 @@ export const TransformData = (intervals: IInterval[], startDate: Dayjs | null, e
 
     const differenceInDays: number = endDate.diff(startDate, "day");
 
-    const formatData = (workDataObj: ITransformSchedule, interval: IInterval) => {    
-        const newInterval = { ...interval, id: uuidv4() };
+    const formatData = (workDataObj: ITransformSchedule, interval: IInterval) => { 
+        let newInterval = {} as IInterval
+        if (interval?.start.split('T')[1] === '00:00:00') {
+            newInterval = { ...interval, id: uuidv4() };
+        } else {
+            newInterval = { ...interval };
+        }
         
         workDataObj.id = newInterval.doctor.id;
         workDataObj.Name = newInterval.doctor.first_name + ' ' + newInterval.doctor.last_name[0] + '.' + newInterval.doctor.father_name[0];

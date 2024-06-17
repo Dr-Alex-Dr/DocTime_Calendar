@@ -44,12 +44,33 @@ const Calendar = () => {
 
       dispatch(updateIntervals(newInterval));
 
-      const transforData2 = TransformData(newInterval, startDate, endDate, currentSchedule, true)
-      const newData2: ITransformSchedule[] = transforData2.transformSchedule;
-      const newInterval2: IInterval[] = transforData2.completionSchedule;
 
-  
-      setFormatData(newData2)
+      const isValidDate = (dateString: string) => {
+        return !isNaN(Date.parse(dateString));
+      }
+
+      const newArrayData = []
+      
+      for (let int in newData) {
+        const filterObj: any = {
+          id: newData[int].id,
+          Name: newData[int].Name
+        }
+
+        for (let key in newData[int]) {   
+          if (newData[int].hasOwnProperty(key) && isValidDate(key)) {
+            if (newData[int][key].schedule.id === currentSchedule.id) {
+              filterObj[newData[int][key].start.split('T')[0] || ''] = newData[int][key]
+            }  
+          }
+        }
+
+        newArrayData.push(filterObj)
+      }
+
+
+     
+      setFormatData(newArrayData)
       previousIntervals.current = intervals;
     }
   }
@@ -116,6 +137,7 @@ const Calendar = () => {
   };
 
   const rootStyles = {
+    marginTop: '10px',
     "& .cell": {
       padding: "0px !important",
       height: 30,

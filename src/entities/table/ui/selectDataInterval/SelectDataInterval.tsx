@@ -8,7 +8,6 @@ import { Dayjs } from 'dayjs';
 
 const SelectDataInterval = (props: ISelectDataIntervalProps) => {
     return (
-        <div className={styles.inputData}>
             <div className={styles.inputData}>
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
                     <DatePicker
@@ -18,7 +17,6 @@ const SelectDataInterval = (props: ISelectDataIntervalProps) => {
                     />
                 </LocalizationProvider>
             </div>
-        </div>
     )
 }
 
