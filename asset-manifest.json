@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/DocTime_Calendar/static/css/main.9b39ec51.css",
-    "main.js": "/DocTime_Calendar/static/js/main.110c995b.js",
+    "main.js": "/DocTime_Calendar/static/js/main.efe7161b.js",
     "index.html": "/DocTime_Calendar/index.html",
     "main.9b39ec51.css.map": "/DocTime_Calendar/static/css/main.9b39ec51.css.map",
-    "main.110c995b.js.map": "/DocTime_Calendar/static/js/main.110c995b.js.map"
+    "main.efe7161b.js.map": "/DocTime_Calendar/static/js/main.efe7161b.js.map"
   },
   "entrypoints": [
     "static/css/main.9b39ec51.css",
-    "static/js/main.110c995b.js"
+    "static/js/main.efe7161b.js"
   ]
 }
