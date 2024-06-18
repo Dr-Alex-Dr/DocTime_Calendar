@@ -16,7 +16,7 @@ export interface IDoctor {
 export interface IInterval {
     start: string;
     end: string;
-    cabinet: ICabinet;
+    cabinet?: ICabinet;
     doctor: IDoctor;
     schedule: ISchdule;
     id?: string;

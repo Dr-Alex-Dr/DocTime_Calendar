@@ -5,6 +5,8 @@ import { GridRenderCellParams } from "@mui/x-data-grid";
 
 
 export const GenerateTable = (startDate: Dayjs | null, endDate: Dayjs | null): IColumn[] | [] => {  
+    dayjs.locale("ru");
+
     if (!startDate || !endDate) {
       return [];
     }
@@ -15,10 +17,10 @@ export const GenerateTable = (startDate: Dayjs | null, endDate: Dayjs | null): I
       { field: "Name", headerName: "ФИО", width: 160 },
     ];
 
-
+    
     for (let numberDay = 0; numberDay < differenceInDays + 1; numberDay++) {
       const nextDate = startDate.add(numberDay, "day");
-        dayjs.locale("ru");
+        
       const column = {
         field: nextDate.format("YYYY-MM-DD"),
         headerName: nextDate.format("dd D"),
@@ -32,5 +34,6 @@ export const GenerateTable = (startDate: Dayjs | null, endDate: Dayjs | null): I
     }
 
    
+    console.log(newColumns)
     return newColumns;
   };

@@ -1,12 +1,12 @@
 import { Interface } from "readline";
-import { IInterval, ISchdule, } from "../../../entities/table/model";
+import { IDoctor, IInterval, ISchdule, } from "../../../entities/table/model";
 import { ITransformSchedule } from "../model/types";
 import dayjs, { Dayjs } from "dayjs";
 import {v4 as uuidv4} from "uuid";
 import { ITransformDataProps } from "../model/types";
 
 
-export const TransformData = (intervals: IInterval[], startDate: Dayjs | null, endDate: Dayjs | null, currentSchedule: ISchdule): ITransformDataProps => {
+export const TransformData = (intervals: IInterval[], startDate: Dayjs | null, endDate: Dayjs | null, currentSchedule: ISchdule, doctors: IDoctor[]): ITransformDataProps => {
     const newFilterInterval = intervals.filter(interval => interval.schedule.id == currentSchedule.id);
     
     if (!intervals) {
@@ -76,6 +76,23 @@ export const TransformData = (intervals: IInterval[], startDate: Dayjs | null, e
             map.set(interval.doctor.id, workDataObj);
         }
     }
+
+    for (let doctor of doctors) {
+        if (!map.has(doctor.id)) {
+            const interval: IInterval = {
+                start: '',
+                end: '',
+                doctor: {...doctor},
+                schedule: { ...currentSchedule}
+            }
+            const workDataObj: any = {...generateBlank(interval)};
+            
+            formatData(workDataObj, interval);
+            map.set(doctor.id, workDataObj);
+        } 
+    }
+
+    
 
 
     function isValidDate(dateString: string) {

@@ -19,18 +19,21 @@ import { compareIntervals } from "./lib/compareIntervals";
 import CircularProgress from '@mui/material/CircularProgress';
 import { AddScheduleForm } from "../../entities/table";
 import { SelectSchedule } from "../../entities/table";
+import { getDoctors } from "../../entities/table/lib/doctorsSlice";
 
 const Calendar = () => {
+  dayjs.locale("ru");
+
   const [startDate, setStartDate] = useState<Dayjs | null>(dayjs());
   const [endDate, setEndDate] = useState<Dayjs | null>(dayjs().add(7, "day"));
 
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [formatData, setFormatData] = useState<ITransformSchedule[] | []>([]);
-  const [localIntervals, setLocalIntervals] = useState<IInterval[]>();
 
   const dispatch = useAppDispatch();
 
-  const currentSchedule = useAppSelector((state) => state.schedules.currentSchedule)
+  const currentSchedule = useAppSelector((state) => state.schedules.currentSchedule);
+  const doctors = useAppSelector((state) => state.doctors.items);
   const intervals = useAppSelector((state) => state.intervals.intervals);
   const status = useAppSelector((state) => state.intervals.status);
   const error = useAppSelector((state) => state.intervals.error);
@@ -38,13 +41,8 @@ const Calendar = () => {
   const previousIntervals = useRef<IInterval[]>(intervals);
 
   const updateData = () => {
-    if (currentSchedule && localIntervals) { 
-
- 
-      // const filterSchedule: IInterval[] = localIntervals.filter((interval) => interval.schedule.id === currentSchedule.id)
-      // console.log(currentSchedule, localIntervals)
-      
-      const transforData = TransformData(intervals, startDate, endDate, currentSchedule)
+    if (currentSchedule && doctors) { 
+      const transforData = TransformData(intervals, startDate, endDate, currentSchedule, doctors)
       const newData: ITransformSchedule[] = transforData.transformSchedule;
       const newInterval: IInterval[] = transforData.completionSchedule;
 
@@ -64,8 +62,7 @@ const Calendar = () => {
   useEffect(() => {
     dispatch(getCabinets());
     dispatch(getIntervals());
-
-    setLocalIntervals(intervals);
+    dispatch(getDoctors())
   }, [dispatch])
 
 
