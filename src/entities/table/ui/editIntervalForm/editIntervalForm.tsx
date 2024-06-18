@@ -27,6 +27,7 @@ export const EditIntervalForm = () => {
     const cabinets = useAppSelector<ICabinet[]>((state) => state.cabinets.items);
     const isOpen = useAppSelector<boolean>((state) => state.intervals.isOpenFormEdit);
 
+   
     const interval: IInterval | undefined = intervals.find((interval) => interval?.id === intervalId);
     const formatInterval: string = getInterval(interval)
 
@@ -48,7 +49,7 @@ export const EditIntervalForm = () => {
     const handleUpdateInterval = () => {
         if (interval) {
             const newInterval = copyInterval();
-            dispatch(updateInterval(newInterval))
+            dispatch(updateInterval({ newInterval: newInterval, cabinet: workCabinet }));
         }
         
         dispatch(closeForm())
@@ -57,7 +58,7 @@ export const EditIntervalForm = () => {
     const handleDeleteInterval = () => {  
         if (interval) {
             const newInterval = copyInterval();
-            dispatch(deleteInterval(newInterval))
+            dispatch(deleteInterval(newInterval));
         }
         
         dispatch(closeForm())
@@ -66,11 +67,12 @@ export const EditIntervalForm = () => {
     const handleCreateInterval = () => {     
         if (interval) {
             const newInterval = copyInterval();
-            dispatch(addIntervals(newInterval))
+            dispatch(addIntervals({ newInterval: newInterval, cabinet: workCabinet }));
         }
         
         dispatch(closeForm())
     }
+
 
     const checkingInterval = (): boolean => {
         return interval?.start.split('T')[1] !== '00:00:00';

@@ -16,7 +16,6 @@ const Cell = ({params}: IInterval | any): React.ReactElement => {
     }
 
     const handleOpenForm = () => {
-       
         dispatch(setIntervalId(params?.id ?? ''));
         dispatch(openForm());
     };

@@ -7,6 +7,8 @@ import { ITransformDataProps } from "../model/types";
 
 
 export const TransformData = (intervals: IInterval[], startDate: Dayjs | null, endDate: Dayjs | null, currentSchedule: ISchdule): ITransformDataProps => {
+    const newFilterInterval = intervals.filter(interval => interval.schedule.id == currentSchedule.id);
+    
     if (!intervals) {
         return {
             transformSchedule: [],
@@ -61,7 +63,7 @@ export const TransformData = (intervals: IInterval[], startDate: Dayjs | null, e
 
     const map = new Map();
 
-    for (let interval of intervals) {
+    for (let interval of newFilterInterval) {
         if (map.has(interval.doctor.id)) {
             const workDataObj = {...map.get(interval.doctor.id)};
 
@@ -70,7 +72,6 @@ export const TransformData = (intervals: IInterval[], startDate: Dayjs | null, e
         } else {
             const workDataObj: any = {...generateBlank(interval)};
             
-
             formatData(workDataObj, interval);
             map.set(interval.doctor.id, workDataObj);
         }
@@ -90,7 +91,6 @@ export const TransformData = (intervals: IInterval[], startDate: Dayjs | null, e
             }
         }
     }
-
 
     return {
         transformSchedule: Array.from(map.values()),

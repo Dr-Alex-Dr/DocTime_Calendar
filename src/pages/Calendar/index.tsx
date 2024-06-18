@@ -26,6 +26,7 @@ const Calendar = () => {
 
   const [columns, setColumns] = useState<GridColDef[]>([]);
   const [formatData, setFormatData] = useState<ITransformSchedule[] | []>([]);
+  const [localIntervals, setLocalIntervals] = useState<IInterval[]>();
 
   const dispatch = useAppDispatch();
 
@@ -37,40 +38,20 @@ const Calendar = () => {
   const previousIntervals = useRef<IInterval[]>(intervals);
 
   const updateData = () => {
-    if (currentSchedule) {
+    if (currentSchedule && localIntervals) { 
+
+ 
+      // const filterSchedule: IInterval[] = localIntervals.filter((interval) => interval.schedule.id === currentSchedule.id)
+      // console.log(currentSchedule, localIntervals)
+      
       const transforData = TransformData(intervals, startDate, endDate, currentSchedule)
       const newData: ITransformSchedule[] = transforData.transformSchedule;
       const newInterval: IInterval[] = transforData.completionSchedule;
 
       dispatch(updateIntervals(newInterval));
 
+      setFormatData(newData)
 
-      const isValidDate = (dateString: string) => {
-        return !isNaN(Date.parse(dateString));
-      }
-
-      const newArrayData = []
-      
-      for (let int in newData) {
-        const filterObj: any = {
-          id: newData[int].id,
-          Name: newData[int].Name
-        }
-
-        for (let key in newData[int]) {   
-          if (newData[int].hasOwnProperty(key) && isValidDate(key)) {
-            if (newData[int][key].schedule.id === currentSchedule.id) {
-              filterObj[newData[int][key].start.split('T')[0] || ''] = newData[int][key]
-            }  
-          }
-        }
-
-        newArrayData.push(filterObj)
-      }
-
-
-     
-      setFormatData(newArrayData)
       previousIntervals.current = intervals;
     }
   }
@@ -83,6 +64,8 @@ const Calendar = () => {
   useEffect(() => {
     dispatch(getCabinets());
     dispatch(getIntervals());
+
+    setLocalIntervals(intervals);
   }, [dispatch])
 
 
@@ -97,34 +80,34 @@ const Calendar = () => {
   },  [startDate, endDate])
 
   useEffect(() => {
-    updateData()
+    
+    updateData();
   }, [currentSchedule])
 
   useEffect(() => {
     setColumns(GenerateTable(startDate, endDate));
     dispatch(getCabinets());
-    
   }, []);
 
 
-  if (status === 'loading') {
-    return (
-      <Box sx={{ 
-          display: 'flex',
-          width: '100%',
-          height: '100vh',
-          justifyContent: 'center',
-          alignItems: 'center',
-          }}>
-        <CircularProgress />
-      </Box>
+  // if (status === 'loading') {
+  //   return (
+  //     <Box sx={{ 
+  //         display: 'flex',
+  //         width: '100%',
+  //         height: '100vh',
+  //         justifyContent: 'center',
+  //         alignItems: 'center',
+  //         }}>
+  //       <CircularProgress />
+  //     </Box>
       
-    );
-  }
+  //   );
+  // }
 
-  if (status === 'failed') {
-    return <div>Error: {error}</div>;
-  }
+  // if (status === 'failed') {
+  //   return <div>Error: {error}</div>;
+  // }
 
   const handleDateChange = (newValue: Dayjs | null, type: 'start' | 'end'): void => {
     if (type === 'start') {
@@ -165,17 +148,26 @@ const Calendar = () => {
               <AddScheduleForm/>
 
             </div>
+            {status === 'loading' ? <Box sx={{ 
+              display: 'flex',
+              width: '100%',
+              height: '100vh',
+              justifyContent: 'center',
+              alignItems: 'center',
+              }}>
+            <CircularProgress />
+          </Box> : <Box sx={rootStyles}>
+                <DataGrid
+                    rows={formatData}
+                    columns={columns}
+                    disableRowSelectionOnClick
+                    hideFooter
+                    showCellVerticalBorder
+                    showColumnVerticalBorder
+                />
+              </Box>}
 
-            <Box sx={rootStyles}>
-              <DataGrid
-                  rows={formatData}
-                  columns={columns}
-                  disableRowSelectionOnClick
-                  hideFooter
-                  showCellVerticalBorder
-                  showColumnVerticalBorder
-              />
-            </Box>
+              
             <EditIntervalForm />
           </div>
   );

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import {IInterval} from "../model";
+import {ICabinet, IInterval} from "../model";
 import { v4 as uuidv4 } from 'uuid';
 import axios from "axios";
 import {baseUrl} from "../../../shared/const/url";
@@ -21,12 +21,13 @@ export const getIntervals = createAsyncThunk<IInterval[]>('intervals/getInterval
     return response?.data
 })
 
-export const addIntervals = createAsyncThunk<IInterval, any>('intervals/addInterval', async (newInterval) => {
+export const addIntervals = createAsyncThunk<IInterval, any>('intervals/addInterval', async ({newInterval, cabinet}) => {
     const response = await axios.post(`${baseUrl}/intervals/`, {
         start: newInterval.start,
         end: newInterval.end,
         doctor_id: newInterval.doctor.id,
-        schedule_id: newInterval.schedule.id
+        schedule_id: newInterval.schedule.id,
+        cabinet_id: cabinet?.id,
       }, {
         headers: {
           'Content-Type': 'application/json'
@@ -36,12 +37,15 @@ export const addIntervals = createAsyncThunk<IInterval, any>('intervals/addInter
       return response?.data;
 });
 
-export const updateInterval = createAsyncThunk<IInterval, any>('intervals/updateInterval', async (newInterval) => {
+export const updateInterval = createAsyncThunk<any, any>('intervals/updateInterval', async ({newInterval, cabinet}) => {
+    console.log(newInterval, cabinet)
+    
     const response = await axios.put(`${baseUrl}/intervals/${newInterval.id}`, {
         start: newInterval.start,
         end: newInterval.end,
         doctor_id: newInterval.doctor.id,
-        schedule_id: newInterval.schedule.id
+        schedule_id: newInterval.schedule.id,
+        cabinet_id: cabinet?.id,
       }, {
         headers: {
           'Content-Type': 'application/json'

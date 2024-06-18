@@ -4,6 +4,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import { useAppDispatch, useAppSelector } from '../../../../shared/lib/store/redux';
 import { getSchedules, setSchedule } from '../../lib/schedulesSlice';
 import { ISchdule } from '../../model';
+import { getIntervals } from '../../lib/intervalSlice';
 
 const SelectSchedule = () => {
     const dispatch = useAppDispatch();
@@ -15,6 +16,8 @@ const SelectSchedule = () => {
         const selectedSchedule: ISchdule | undefined = schedules.find((schedule) => schedule.id === event.target.value);
         if (selectedSchedule) {
             dispatch(setSchedule(selectedSchedule));
+
+            dispatch(getIntervals())
         }
     };
 
