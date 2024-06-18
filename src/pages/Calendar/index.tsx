@@ -20,6 +20,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { AddScheduleForm } from "../../entities/table";
 import { SelectSchedule } from "../../entities/table";
 import { getDoctors } from "../../entities/table/lib/doctorsSlice";
+import { DistributeDoctors } from "../../entities/table";
 
 const Calendar = () => {
   dayjs.locale("ru");
@@ -42,7 +43,7 @@ const Calendar = () => {
 
   const updateData = () => {
     if (currentSchedule && doctors) { 
-      const transforData = TransformData(intervals, startDate, endDate, currentSchedule, doctors)
+      const transforData = TransformData(intervals, startDate, endDate, currentSchedule, doctors);
       const newData: ITransformSchedule[] = transforData.transformSchedule;
       const newInterval: IInterval[] = transforData.completionSchedule;
 
@@ -54,10 +55,6 @@ const Calendar = () => {
     }
   }
 
-  // const filterSchedule = () => {
-  //   const filterSchedule: IInterval[] = intervals.filter((schedule) => schedule.schedule.id === currentSchedule.id)
-  //   console.log(filterSchedule)
-  // }
 
   useEffect(() => {
     dispatch(getCabinets());
@@ -87,21 +84,6 @@ const Calendar = () => {
   }, []);
 
 
-  // if (status === 'loading') {
-  //   return (
-  //     <Box sx={{ 
-  //         display: 'flex',
-  //         width: '100%',
-  //         height: '100vh',
-  //         justifyContent: 'center',
-  //         alignItems: 'center',
-  //         }}>
-  //       <CircularProgress />
-  //     </Box>
-      
-  //   );
-  // }
-
   // if (status === 'failed') {
   //   return <div>Error: {error}</div>;
   // }
@@ -122,6 +104,7 @@ const Calendar = () => {
       padding: "0px !important",
       height: 30,
     },
+    
   };
 
   return (
@@ -143,6 +126,8 @@ const Calendar = () => {
               />
               <SelectSchedule />
               <AddScheduleForm/>
+              <DistributeDoctors/>
+
 
             </div>
             {status === 'loading' ? <Box sx={{ 

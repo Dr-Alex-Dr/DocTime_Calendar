@@ -24,7 +24,7 @@ export const GenerateTable = (startDate: Dayjs | null, endDate: Dayjs | null): I
       const column = {
         field: nextDate.format("YYYY-MM-DD"),
         headerName: nextDate.format("dd D"),
-        width: (window.screen.width - 160) / 8,
+        width: (window.screen.width - 180) / 8,
         cellClassName: "cell",
         renderCell: (params: GridRenderCellParams<any, any>) => (
           <Cell params={params.value || ""}></Cell>
