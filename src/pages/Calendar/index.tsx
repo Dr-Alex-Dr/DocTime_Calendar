@@ -11,7 +11,7 @@ import { ITransformSchedule } from "./model/types";
 import { EditIntervalForm } from "../../entities/table/ui/editIntervalForm/editIntervalForm";
 import { useAppDispatch, useAppSelector  } from "../../shared/lib/store/redux";
 import { getCabinets } from "../../entities/table/lib/cabinetsSlice";
-import {addInterval, updateIntervals} from "../../entities/table/lib/intervalSlice";
+import { updateIntervals} from "../../entities/table/lib/intervalSlice";
 import {IInterval} from "../../entities/table/model";
 import {getIntervals} from "../../entities/table/lib/intervalSlice";
 import {v4 as uuidv4} from "uuid";

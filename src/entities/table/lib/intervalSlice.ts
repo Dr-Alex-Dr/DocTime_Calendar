@@ -1,24 +1,40 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import {ICabinet, IInterval} from "../model";
-import { v4 as uuidv4 } from 'uuid';
+import { IInterval} from "../model";
 import axios from "axios";
 import {baseUrl} from "../../../shared/const/url";
 import { ITransformSchedule } from '../../../pages/Calendar/model/types';
 
+interface InitialState {
+    intervals: IInterval[];
+    transformSchedule: ITransformSchedule[];
+    intervalId: string;
+    isOpenFormEdit: boolean;
+    status: 'idle' | 'loading' | 'succeeded' | 'failed';
+    error: string | null;
+}
 
-const initialState = {
-    intervals: [] as IInterval[],
-    transformSchedule: [] as ITransformSchedule[],
+const initialState: InitialState = {
+    intervals: [],
+    transformSchedule: [],
     intervalId: '',
     isOpenFormEdit: false,
     status: 'idle',
-    error: null as string | null,
+    error: null,
+};
+
+const updateIntervalList = (state: InitialState, newInterval: IInterval) => {
+    const isExist = state.intervals.some(interval => interval.id === newInterval.id);
+    if (isExist) {
+        state.intervals = state.intervals.map(interval => interval.id === newInterval.id ? newInterval : interval);
+    } else {
+        state.intervals = [...state.intervals, newInterval];
+    }
 };
 
 export const getIntervals = createAsyncThunk<IInterval[]>('intervals/getInterval', async () => {
     const response = await axios.get(`${baseUrl}/intervals/`)
 
-    return response?.data
+    return response.data
 })
 
 export const addIntervals = createAsyncThunk<IInterval, any>('intervals/addInterval', async ({newInterval, cabinet}) => {
@@ -34,12 +50,10 @@ export const addIntervals = createAsyncThunk<IInterval, any>('intervals/addInter
         }
       })
   
-      return response?.data;
+      return response.data;
 });
 
 export const updateInterval = createAsyncThunk<any, any>('intervals/updateInterval', async ({newInterval, cabinet}) => {
-    console.log(newInterval, cabinet)
-    
     const response = await axios.put(`${baseUrl}/intervals/${newInterval.id}`, {
         start: newInterval.start,
         end: newInterval.end,
@@ -52,7 +66,7 @@ export const updateInterval = createAsyncThunk<any, any>('intervals/updateInterv
         }
       })
   
-      return response?.data;
+      return response.data;
 })
 
 export const deleteInterval = createAsyncThunk<any, any>('intervals/deleteInterval', async (newInterval) => {
@@ -65,30 +79,8 @@ const intervalSlice = createSlice({
     name: 'intervals',
     initialState: initialState,
     reducers: {
-        setInterval: (state, action) => {
-            state.intervals = state.intervals.map((interval) => {
-                if (interval.id === action.payload.id) {
-                    return action.payload;
-                }
-                return interval;
-            });
-        },
         setIntervalId: (state, action) => {
             state.intervalId = action.payload;
-        },
-        addInterval: (state, action) => {
-            const isExist = state.intervals.some(interval => interval.id === action.payload.id);
-
-            if (isExist) {
-                state.intervals = state.intervals.map((interval) => {
-                    if (interval.id === action.payload.id) {
-                        return action.payload;
-                    }
-                    return interval;
-                });
-            } else {
-                state.intervals = [...state.intervals, action.payload]
-            }
         },
         updateIntervals: (state, action) => {
             state.intervals = [...action.payload]
@@ -119,19 +111,7 @@ const intervalSlice = createSlice({
             })
             .addCase(addIntervals.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-
-                const isExist = state.intervals.some(interval => interval.id === action.payload.id);
-
-                if (isExist) {
-                    state.intervals = state.intervals.map((interval) => {
-                        if (interval.id === action.payload.id) {
-                            return action.payload;
-                        }
-                        return interval;
-                    });
-                } else {
-                    state.intervals = [...state.intervals, action.payload]
-                }
+                updateIntervalList(state, action.payload);
             })
             .addCase(addIntervals.rejected, (state, action) => {
                 state.status = 'failed';
@@ -157,19 +137,7 @@ const intervalSlice = createSlice({
             })
             .addCase(updateInterval.fulfilled, (state, action) => {
                 state.status = 'succeeded';
-                
-                const isExist = state.intervals.some(interval => interval.id === action.payload.id);
-
-                if (isExist) {
-                    state.intervals = state.intervals.map((interval) => {
-                        if (interval.id === action.payload.id) {
-                            return action.payload;
-                        }
-                        return interval;
-                    });
-                } else {
-                    state.intervals = [...state.intervals, action.payload]
-                }
+                updateIntervalList(state, action.payload);
             })
             .addCase(updateInterval.rejected, (state, action) => {
                 state.status = 'failed';
@@ -179,5 +147,5 @@ const intervalSlice = createSlice({
 
 });
 
-export const { addInterval, openForm, closeForm, setIntervalId, updateIntervals, setInterval } = intervalSlice.actions;
+export const { openForm, closeForm, setIntervalId, updateIntervals } = intervalSlice.actions;
 export default intervalSlice.reducer;

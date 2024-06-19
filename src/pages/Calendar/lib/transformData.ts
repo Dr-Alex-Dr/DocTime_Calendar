@@ -93,8 +93,7 @@ export const TransformData = (intervals: IInterval[], startDate: Dayjs | null, e
     }
 
     
-
-
+    
     function isValidDate(dateString: string) {
         return !isNaN(Date.parse(dateString));
     }

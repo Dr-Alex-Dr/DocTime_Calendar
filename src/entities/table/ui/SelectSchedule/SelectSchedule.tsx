@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from '../../../../shared/lib/store/red
 import { getSchedules, setSchedule } from '../../lib/schedulesSlice';
 import { ISchdule } from '../../model';
 import { getIntervals } from '../../lib/intervalSlice';
+import { InputLabel } from '@mui/material';
 
 const SelectSchedule = () => {
     const dispatch = useAppDispatch();

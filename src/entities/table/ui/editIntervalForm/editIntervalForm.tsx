@@ -7,7 +7,7 @@ import TextField from '@mui/material/TextField';
 import styles from './EditIntervalForm.module.scss';
 import { ICabinet, IInterval } from "../../model";
 import { useAppSelector, useAppDispatch } from "../../../../shared/lib/store/redux";
-import { closeForm, setInterval, addInterval, addIntervals, updateInterval, deleteInterval } from "../../lib/intervalSlice";
+import { closeForm, addIntervals, updateInterval, deleteInterval } from "../../lib/intervalSlice";
 import Autocomplete from '@mui/material/Autocomplete';
 import { getInterval } from "../../lib/getInterval";
 import dayjs from 'dayjs';

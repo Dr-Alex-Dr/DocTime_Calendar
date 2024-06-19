@@ -5,7 +5,7 @@ import { EditIntervalForm } from '../editIntervalForm/editIntervalForm';
 import { useDispatch } from 'react-redux';
 import {IInterval} from "../../model";
 import {useAppSelector, useAppDispatch} from '../../../../shared/lib/store/redux';
-import {openForm, addInterval, setIntervalId} from "../../lib/intervalSlice";
+import {openForm, setIntervalId} from "../../lib/intervalSlice";
 import {getInterval} from "../../lib/getInterval";
 
 const Cell = ({params}: IInterval | any): React.ReactElement => {
