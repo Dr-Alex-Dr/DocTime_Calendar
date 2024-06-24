@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { IDoctor } from '../model';
 import axios from 'axios';
 import {baseUrl} from "../../../shared/const/url";
 import { ISchdule } from '../model';
@@ -7,7 +6,7 @@ import { ISchdule } from '../model';
 export const getSchedules = createAsyncThunk<ISchdule[]>('doctors/getSchedule', async () => {
     const response = await axios.get(`${baseUrl}/schedules/`)
 
-    return response?.data
+    return response.data
 });
 
 export const addSchedule = createAsyncThunk<ISchdule, string>('doctors/addSchedule', async (ScheduleName) => {
@@ -20,7 +19,7 @@ export const addSchedule = createAsyncThunk<ISchdule, string>('doctors/addSchedu
       }
     })
 
-    return response?.data;
+    return response.data;
 });
 
 const schedulesSlice = createSlice({
@@ -47,7 +46,7 @@ const schedulesSlice = createSlice({
         })
         .addCase(getSchedules.rejected, (state, action) => {
           state.status = 'failed';
-          state.error = action.error.message || 'Failed to fetch doctros';
+          state.error = action.error.message || 'Failed to fetch schedule';
         })
 
         .addCase(addSchedule.pending, state => {
@@ -59,7 +58,7 @@ const schedulesSlice = createSlice({
         })
         .addCase(addSchedule.rejected, (state, action) => {
             state.status = 'failed';
-            state.error = action.error.message || 'Failed to fetch doctros';
+            state.error = action.error.message || 'Failed to fetch schedule';
         });
   },
 });

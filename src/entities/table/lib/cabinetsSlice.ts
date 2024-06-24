@@ -1,15 +1,12 @@
-// redux/cabinetsSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { fetchBaseQuery } from '@reduxjs/toolkit/query';
 import { ICabinet } from '../model';
 import axios from 'axios';
 import {baseUrl} from "../../../shared/const/url";
-import {cabinets} from "../../../shared/const/url";
 
 export const getCabinets = createAsyncThunk<ICabinet[]>('cabinets/getCabinets', async () => {
     const response = await axios.get(`${baseUrl}/cabinets`)
 
-    return response?.data
+    return response.data
 });
 
 const cabinetsSlice = createSlice({

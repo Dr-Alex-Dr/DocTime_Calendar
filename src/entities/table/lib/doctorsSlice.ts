@@ -6,7 +6,7 @@ import {baseUrl} from "../../../shared/const/url";
 export const getDoctors = createAsyncThunk<IDoctor[]>('doctors/getDoctors', async () => {
     const response = await axios.get(`${baseUrl}/doctors/`)
 
-    return response?.data
+    return response.data
 });
 
 const doctorsSlice = createSlice({

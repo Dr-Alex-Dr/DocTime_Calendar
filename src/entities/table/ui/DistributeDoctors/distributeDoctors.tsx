@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styles from './distributeDoctors.module.scss';
 import Button from '@mui/material/Button';
-import { useLazyDistributeDoctorsQuery } from '../../api/api';
-
 import { getIntervals } from '../../lib/intervalSlice';
 import { useAppDispatch } from '../../../../shared/lib/store/redux';
 import axios from 'axios';

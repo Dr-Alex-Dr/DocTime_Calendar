@@ -1,14 +1,11 @@
 import styles from './Cell.module.scss';
-import {useEffect, useState} from 'react';
 import classNames from 'classnames';
-import { EditIntervalForm } from '../editIntervalForm/editIntervalForm';
-import { useDispatch } from 'react-redux';
-import {IInterval} from "../../model";
-import {useAppSelector, useAppDispatch} from '../../../../shared/lib/store/redux';
-import {openForm, setIntervalId} from "../../lib/intervalSlice";
-import {getInterval} from "../../lib/getInterval";
+import { IInterval } from "../../model";
+import { useAppDispatch } from '../../../../shared/lib/store/redux';
+import { openForm, setIntervalId } from "../../lib/intervalSlice";
+import { getInterval } from "../../lib/getInterval";
 
-const Cell = ({params}: IInterval | any): React.ReactElement => {
+const Cell = ({ params }: IInterval | any): React.ReactElement => {
     const dispatch = useAppDispatch();
 
     const getCabinet = (): string => {
@@ -29,7 +26,7 @@ const Cell = ({params}: IInterval | any): React.ReactElement => {
 
     return (
         <div
-            className={classNames(styles.container, {[styles.active]: isExist()})}
+            className={classNames(styles.container, { [styles.active]: isExist() })}
             onClick={handleOpenForm}
         >
             <p>{getInterval(params)}</p>
@@ -38,4 +35,4 @@ const Cell = ({params}: IInterval | any): React.ReactElement => {
     )
 }
 
-export {Cell}
+export { Cell }
