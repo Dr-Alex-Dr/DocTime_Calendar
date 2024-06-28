@@ -4,7 +4,11 @@ import axios from 'axios';
 import {baseUrl} from "../../../shared/const/url";
 
 export const getDoctors = createAsyncThunk<IDoctor[]>('doctors/getDoctors', async () => {
-    const response = await axios.get(`${baseUrl}/doctors/`)
+    const response = await axios.get(`${baseUrl}/doctors/`, {
+      headers: {
+         'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    })
 
     return response.data
 });

@@ -32,7 +32,11 @@ const updateIntervalList = (state: InitialState, newInterval: IInterval) => {
 };
 
 export const getIntervals = createAsyncThunk<IInterval[]>('intervals/getInterval', async () => {
-    const response = await axios.get(`${baseUrl}/intervals/`)
+    const response = await axios.get(`${baseUrl}/intervals/`, {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    })
 
     return response.data
 })
@@ -46,7 +50,8 @@ export const addIntervals = createAsyncThunk<IInterval, any>('intervals/addInter
         cabinet_id: cabinet?.id,
     }, {
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
     })
 
@@ -62,7 +67,8 @@ export const updateInterval = createAsyncThunk<any, any>('intervals/updateInterv
         cabinet_id: cabinet?.id,
     }, {
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
     })
 
@@ -70,7 +76,11 @@ export const updateInterval = createAsyncThunk<any, any>('intervals/updateInterv
 })
 
 export const deleteInterval = createAsyncThunk<any, any>('intervals/deleteInterval', async (newInterval) => {
-    await axios.delete(`${baseUrl}/intervals/${newInterval.id}`)
+    await axios.delete(`${baseUrl}/intervals/${newInterval.id}`, {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    })
 
     return newInterval.id;
 })

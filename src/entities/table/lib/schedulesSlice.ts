@@ -4,7 +4,11 @@ import {baseUrl} from "../../../shared/const/url";
 import { ISchdule } from '../model';
 
 export const getSchedules = createAsyncThunk<ISchdule[]>('doctors/getSchedule', async () => {
-    const response = await axios.get(`${baseUrl}/schedules/`)
+    const response = await axios.get(`${baseUrl}/schedules/`, {
+      headers: {
+         'Authorization': `Bearer ${localStorage.getItem('token')}`
+      }
+    })
 
     return response.data
 });
@@ -15,7 +19,8 @@ export const addSchedule = createAsyncThunk<ISchdule, string>('doctors/addSchedu
       description: ScheduleName
     }, {
       headers: {
-        'Content-Type': 'Accept: application/json'
+        'Content-Type': 'Accept: application/json',
+         'Authorization': `Bearer ${localStorage.getItem('token')}`
       }
     })
 

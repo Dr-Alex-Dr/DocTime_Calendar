@@ -2,7 +2,7 @@ import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import Link from '@mui/material/Link';
+import { Link } from 'react-router-dom';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -12,6 +12,9 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import styles from './registration.module.scss';
+import { useAppDispatch, useAppSelector } from '../../shared/lib/store/redux';
+import { register } from '../../entities/table/lib/userSlice';
+import { useNavigate } from "react-router-dom";
 
 const schema = yup.object().shape({
     username: yup.string()
@@ -28,6 +31,10 @@ const schema = yup.object().shape({
 
 
 export const Registration = () => {
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
+    const status = useAppSelector((state) => state.user.statusReg);
+
     const { control, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(schema),
         defaultValues: {
@@ -37,8 +44,23 @@ export const Registration = () => {
         },
     });
 
-    const onSubmit = (data: any) => {
-        console.log(data);
+    React.useEffect(() => {
+        
+
+        if (status == 'succeeded') {
+            console.log(status);
+            navigate("/login");
+            
+        }
+    }, [status])
+
+    const onSubmit = (event: any) => {
+        const obj = {
+            username: event.username,
+            email: event.email,
+            password: event.password
+        }
+        dispatch(register(obj));
     };
 
     return (
@@ -48,7 +70,7 @@ export const Registration = () => {
                     <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                    Регистрация
+                    Зарегистрироваться
                 </Typography>
 
                 <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate sx={sxStyles.form}>
@@ -113,14 +135,14 @@ export const Registration = () => {
                         variant="contained"
                         sx={sxStyles.submitButton}
                     >
-                        Войти
+                        Зарегестрироваться
                     </Button>
                     <Grid container>
                         <Grid item xs>
                         </Grid>
                         <Grid item>
-                            <Link href="#" variant="body2">
-                                {"Зарегестрироваться "}
+                            <Link to="/login">
+                                {"Войти"}
                             </Link>
                         </Grid>
                     </Grid>

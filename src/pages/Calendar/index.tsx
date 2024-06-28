@@ -21,8 +21,13 @@ import { AddScheduleForm } from "../../entities/table";
 import { SelectSchedule } from "../../entities/table";
 import { getDoctors } from "../../entities/table/lib/doctorsSlice";
 import { DistributeDoctors } from "../../entities/table";
+import Button from '@mui/material/Button';
+import { useNavigate } from "react-router-dom";
+
 
 const Calendar = () => {
+  const navigate = useNavigate();
+
   dayjs.locale("ru");
 
   const [startDate, setStartDate] = useState<Dayjs | null>(dayjs());
@@ -127,7 +132,11 @@ const Calendar = () => {
               <SelectSchedule />
               <AddScheduleForm/>
               <DistributeDoctors/>
-
+              <Button style={{marginLeft: 'auto'}} variant="text" onClick={() => {
+                
+                localStorage.setItem('token', '')
+                navigate("/login");
+                }}>Выход</Button>
 
             </div>
             {status === 'loading' ? <Box sx={{ 
