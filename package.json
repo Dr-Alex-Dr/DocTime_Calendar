@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "prepare": "husky",
     "contract:generate": "npx swagger-typescript-api -p https://64v.ru/api/v1/openapi.json -o ./src/shared/api -t ./src/shared/config/templates/default/ --modular --axios --type-prefix I && node ./src/shared/config/cleansСontracts.js",
-    "proxy": "lcp --proxyUrl https://64v.ru"
+    "proxy": "lcp --proxyUrl https://64v.ru",
+    "e2e-tests": "npx playwright test"
   },
   "dependencies": {
     "axios": "^1.7.7",
