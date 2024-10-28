@@ -1,4 +1,5 @@
-import { baseUrl } from '../config';
+import { baseUrl } from '../../config';
+import { ContentType, HttpClient, RequestParams } from '../core/http-client.ts';
 import {
   ICabinetAdd,
   ICabinetOut,
@@ -11,9 +12,8 @@ import {
   IScheduleAdd,
   IScheduleOut,
 } from './data-contracts';
-import { ContentType, HttpClient, RequestParams } from './http-client';
 
-export class ScheduleApi<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
+export class api<SecurityDataType = unknown> extends HttpClient<SecurityDataType> {
   /**
    * @description Get a list of all existing doctors.
    *

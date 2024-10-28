@@ -1,18 +1,18 @@
 <%
 const { utils, route, config, modelTypes } = it;
 const { _, pascalCase, require } = utils;
-const apiClassName = 'ScheduleApi';
+const apiClassName = route.moduleName;
 const routes = route.routes;
 const dataContracts = _.map(modelTypes, "name");
 %>
 
 <% if (config.httpClientType === config.constants.HTTP_CLIENT.AXIOS) { %> import { AxiosRequestConfig, AxiosResponse } from "axios"; <% } %>
 
-import { HttpClient, RequestParams, ContentType, HttpResponse } from "./<%~ config.fileNames.httpClient %>";
+import { HttpClient, RequestParams, ContentType, HttpResponse } from "../core/http-client.ts";
 <% if (dataContracts.length) { %>
 import { <%~ dataContracts.join(", ") %> } from "./<%~ config.fileNames.dataContracts %>"
 <% } %>
-import { baseUrl } from '../config'; 
+import { baseUrl } from '../../config'; 
 
 export class <%= apiClassName %><SecurityDataType = unknown><% if (!config.singleHttpClient) { %> extends HttpClient<SecurityDataType> <% } %> {
 <% if(config.singleHttpClient) { %>

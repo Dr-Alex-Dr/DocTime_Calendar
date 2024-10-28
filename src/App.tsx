@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
-import { ScheduleApi } from './shared/api/Api';
+import { api } from './shared/api/schedule/Api';
 
 export const App = () => {
   useEffect(() => {
-    const scheduleApi = new ScheduleApi();
+    const scheduleApi = new api();
     scheduleApi.appsDoctorsApiHandlersAll().then((res) => {
       console.log(res);
     });
