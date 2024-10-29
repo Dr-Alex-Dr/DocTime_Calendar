@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "prepare": "husky",
-    "contract:schedule": "mkdir -p ./src/shared/api/schedule && npx swagger-typescript-api -p https://64v.ru/api/v1/openapi.json -o ./src/shared/api/schedule -t ./src/shared/config/templates/default/ --modular --axios --type-prefix I && node ./src/shared/config/cleansСontracts.js",
+    "contract:schedule": "mkdir -p ./src/shared/api/schedule && npx swagger-typescript-api -p https://64v.ru/api/v1/openapi.json -o ./src/shared/api/schedule -t ./src/shared/config/template --modular --axios --type-prefix I && node ./src/shared/config/template/cleansСontracts.js",
     "e2e-tests": "npx playwright test"
   },
   "dependencies": {
