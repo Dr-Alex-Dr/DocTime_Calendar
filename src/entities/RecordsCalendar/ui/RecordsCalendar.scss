@@ -1,0 +1,37 @@
+.rbc {
+  &-allday-cell {
+    display: none;
+  }
+
+  &-header {
+    font-size: 14px !important;
+    font-weight: 400 !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 25px !important;
+    border-left: none !important;
+  }
+
+  &-time-content {
+    border-top: 1px !important;
+  }
+
+  &-day-slot {
+    .rbc-time-slot {
+      border-top: none !important;
+    }
+  }
+
+  &-time-gutter {
+    .rbc-timeslot-group {
+      border: 0;
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  &-timeslot-group {
+    min-height: 100px;
+  }
+}
