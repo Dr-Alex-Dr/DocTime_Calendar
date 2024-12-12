@@ -34,4 +34,31 @@
   &-timeslot-group {
     min-height: 100px;
   }
+
+  &-event {
+    border: 1px;
+    border-radius: 3px;
+    left: 2px !important;
+    padding: 0;
+  }
+
+  &-day-slot .rbc-events-container {
+    margin-right: 4px;
+  }
+
+  &-event-label {
+    display: none;
+  }
+
+  &-toolbar {
+    display: none;
+  }
+
+  &-time-view {
+    border-radius: 5px;
+  }
+}
+
+.EventContainer {
+  font-size: 12px;
 }
