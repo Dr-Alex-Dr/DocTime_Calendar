@@ -1,56 +1,39 @@
-import { cloneElement, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { createObserver } from '../../../shared/utils/MobxUtils';
 import { Calendar, Culture, DateLocalizer, EventProps, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
-import { EventItem, RecordsCalendarStore } from '../model/RecordsCalendarStore';
+import { RecordsCalendarStore } from '../model/RecordsCalendarStore';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './RecordsCalendar.scss';
 import 'moment/dist/locale/ru';
-import { AppointmentEvent } from './AppointmentEvent';
+import { IEventItemParams } from '../../../entities/CalendarSlot';
+import { CalendarSlot } from '../../../entities/CalendarSlot';
 
-export const RecordsCalendar = createObserver((props: any) => {
+export const RecordsCalendar = createObserver(() => {
   const recordsCalendarStore = new RecordsCalendarStore();
   const { recordIntervals } = recordsCalendarStore;
 
   const localizer = momentLocalizer(moment);
 
-  const statusColors: Record<string, string> = {
-    'Первичный прием': '#BDFFDB',
-    'Повторный осмотр': '#FFEBB7',
-    'Консультация ': '#FFDDDD',
-  };
-
-  const statusBorderColors: Record<string, string> = {
-    'Первичный прием': '#8FDCB2',
-    'Повторный осмотр': '#E7C160',
-    'Консультация ': '#FDB7B7',
-  };
-
-  const statusFontColors: Record<string, string> = {
-    'Первичный прием': '#2C5A41',
-    'Повторный осмотр': '#684D08',
-    'Консультация ': '#721818',
-  };
-
-  const eventPropGetter = (event: any) => {
-    const status = event?.data?.appointment?.status;
-    return {
-      style: {
-        backgroundColor: statusColors[status],
-        color: statusFontColors[status],
-        border: `1px solid ${statusBorderColors[status]}`,
-        borderRadius: '5px',
-        padding: '5px',
-      },
-    };
-  };
+  // const eventPropGetter = (event: any) => {
+  //   const status = event?.data?.appointment?.status;
+  //   return {
+  //     style: {
+  //       backgroundColor: statusColors[status],
+  //       color: statusFontColors[status],
+  //       border: `1px solid ${statusBorderColors[status]}`,
+  //       borderRadius: '5px',
+  //       padding: '5px',
+  //     },
+  //   };
+  // };
 
   const components: any = {
-    event: ({ event }: EventProps<EventItem>) => {
+    event: ({ event }: EventProps<IEventItemParams>) => {
       const data = event?.data;
       if (data?.appointment)
         return (
-          <AppointmentEvent
+          <CalendarSlot
             name={data?.appointment.name}
             status={data?.appointment.status}
             cabinetNumber={data?.appointment.cabinetNumber}
@@ -85,14 +68,11 @@ export const RecordsCalendar = createObserver((props: any) => {
   return (
     <Calendar
       localizer={localizer}
-      view={props.currentView}
+      defaultView="week"
       events={recordIntervals}
       style={{ height: '100vh' }}
       formats={formats}
       components={components}
-      date={props.currentDate}
-      onNavigate={(date) => props.setCurrentDate(date)}
-      eventPropGetter={eventPropGetter}
     />
   );
 }, 'RecordsCalendar');
