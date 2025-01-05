@@ -1,6 +1,4 @@
-import { purple } from '@mui/material/colors';
 import { ButtonParams } from '../types';
-import styles from './Button.module.scss';
 import { ButtonProps, Button as MUIButton, styled } from '@mui/material';
 
 export const Button: React.FC<ButtonParams> = (params) => {
