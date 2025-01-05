@@ -4,6 +4,13 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   base: '/',
   plugins: [react()],
+  css: {
+    preprocessorOptions: {
+      scss: {
+        additionalData: `@use "./src/app/styles/variables.scss" as *;`,
+      },
+    },
+  },
   preview: {
     port: 8080,
     strictPort: true,

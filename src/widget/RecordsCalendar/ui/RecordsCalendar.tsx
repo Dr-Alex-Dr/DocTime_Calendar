@@ -8,8 +8,16 @@ import './RecordsCalendar.scss';
 import 'moment/dist/locale/ru';
 import { IEventItemParams } from '../../../entities/CalendarSlot';
 import { CalendarSlot } from '../../../entities/CalendarSlot';
+import { DateRange } from 'react-day-picker';
+import { SelectedRangeType } from '../../SmallCalendar/types';
 
-export const RecordsCalendar = createObserver(() => {
+export interface RecordsCalendar {
+  rangeDate: DateRange | undefined;
+  selectedRangeType: SelectedRangeType;
+}
+
+export const RecordsCalendar: React.FC<RecordsCalendar> = createObserver((params) => {
+  const { rangeDate, selectedRangeType } = params;
   const recordsCalendarStore = new RecordsCalendarStore();
   const { recordIntervals } = recordsCalendarStore;
 
@@ -68,11 +76,11 @@ export const RecordsCalendar = createObserver(() => {
   return (
     <Calendar
       localizer={localizer}
-      defaultView="week"
+      view={selectedRangeType}
       events={recordIntervals}
-      style={{ height: '100vh' }}
       formats={formats}
       components={components}
+      date={rangeDate?.to}
     />
   );
 }, 'RecordsCalendar');

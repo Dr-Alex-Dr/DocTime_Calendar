@@ -3,17 +3,6 @@
 
 body {
   font-family: Roboto;
-  background-color: #f8fafb;
+  background-color: $backgroundColor;
   overflow: hidden;
-}
-
-.leftMenu {
-  width: 70px;
-  height: '100vh';
-
-  transition: all 0.3s;
-}
-
-.leftMenu:hover {
-  width: 230px;
 }

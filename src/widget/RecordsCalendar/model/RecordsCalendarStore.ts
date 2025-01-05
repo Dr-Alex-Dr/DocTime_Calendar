@@ -4,8 +4,8 @@ export class RecordsCalendarStore {
   get recordIntervals() {
     return [
       {
-        start: new Date('2024-12-22T07:30:00'),
-        end: new Date('2024-12-22T08:15:00'),
+        start: new Date('2025-01-03T07:30:00'),
+        end: new Date('2025-01-03T08:15:00'),
         data: {
           appointment: {
             name: 'Иванова М.С.',
@@ -16,8 +16,8 @@ export class RecordsCalendarStore {
         resourceId: 1,
       },
       {
-        start: new Date('2024-12-20T04:30:00'),
-        end: new Date('2024-12-20T05:15:00'),
+        start: new Date('2025-01-02T04:30:00'),
+        end: new Date('2025-01-02T05:15:00'),
         data: {
           appointment: {
             name: 'Иванова М.С.',

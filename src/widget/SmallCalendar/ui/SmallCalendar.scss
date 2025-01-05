@@ -1,0 +1,74 @@
+.rdp {
+  &-root {
+    --rdp-accent-color: #d0f0ff;
+    --rdp-day_button-border-radius: 4px;
+    --rdp-day-height: 0;
+    --rdp-day-width: 0;
+    --rdp-day_button-width: 36px;
+    --rdp-day_button-height: 36px;
+    --rdp-today-color: default;
+    --rdp-outside-opacity: 0.5;
+    --rdp-range_end-color: $textColor;
+    --rdp-range_start-color: $textColor;
+    --rdp-range_middle-background-color: transparent;
+  }
+
+  &-selected {
+    .rdp-day_button {
+      background-color: var(--rdp-accent-color);
+      font-weight: normal;
+      font-size: 14px;
+    }
+  }
+
+  &-range_middle {
+    .rdp-day_button {
+      border-radius: var(--rdp-day_button-border-radius);
+    }
+  }
+
+  &-day_button {
+    font-size: 14px;
+  }
+
+  &-caption_label {
+    font-weight: normal;
+
+    &::first-letter {
+      text-transform: uppercase !important;
+    }
+  }
+
+  &-today {
+    &:not(&-outside) {
+      background-color: $primaryColor;
+      border-radius: 4px;
+    }
+  }
+
+  &-weekday {
+    &::first-letter {
+      text-transform: uppercase;
+    }
+
+    font-size: 14px;
+    font-weight: normal;
+    padding-bottom: 12px;
+  }
+
+  &-chevron {
+    opacity: 0.55;
+    fill: $textColor;
+  }
+
+  &-nav {
+    width: 80px;
+    justify-content: space-between;
+  }
+}
+
+.DayPickerContainer {
+  padding: 28px 28px 8px 28px;
+  border: 1px solid $borderColor;
+  border-radius: 8px;
+}
