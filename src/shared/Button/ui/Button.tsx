@@ -1,30 +1,23 @@
 import { ButtonParams } from '../types';
-import { ButtonProps, Button as MUIButton, styled } from '@mui/material';
+import { Button as MUIButton } from '@mui/material';
+import styles from './Button.module.scss';
+import cn from 'classnames';
 
 export const Button: React.FC<ButtonParams> = (params) => {
-  const ColorButton = styled(MUIButton)<ButtonProps>(({ theme, variant }) => ({
-    boxShadow: 'none',
-    padding: '6px 16px',
-    textTransform: 'capitalize',
-    fontSize: 16,
-    color: variant === 'text' ? theme.palette.text.primary : '#fff',
-    backgroundColor: variant === 'contained' ? '#2AC6FF' : 'transparent',
-    '&:hover': {
-      boxShadow: 'none',
-    },
-    '&:active': {
-      boxShadow: 'none',
-    },
-  }));
+  const buttonContainer = cn(styles.colorButton, {
+    [styles.contained]: params.variant === 'contained',
+    [styles.text]: params.variant === 'text',
+  });
 
   return (
-    <ColorButton
+    <MUIButton
+      className={buttonContainer}
       variant={params.variant}
       disabled={params.disabled}
       onClick={params.onClick}
       title={params.title}
     >
       {params.children}
-    </ColorButton>
+    </MUIButton>
   );
 };

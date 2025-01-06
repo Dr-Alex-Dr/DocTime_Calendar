@@ -1,7 +1,22 @@
-.ReceptionContainer {
+.receptionContainer {
+}
+
+.smallCalendarContainer {
+  margin-right: 16px;
+}
+
+.calendarContainer {
   display: flex;
 }
 
-.SmallCalendarContainer {
-  margin: 0 16px;
+.receptionTitle {
+  font-size: 34px;
+  font-weight: normal;
+  padding: 16px 0;
+  margin: 0;
+}
+
+.recorderCalendarContainer {
+  margin-right: 16px;
+  width: 100%;
 }
