@@ -26,6 +26,13 @@
     .rbc-time-slot {
       border-top: none !important;
     }
+
+    .rbc-event {
+      border: none !important;
+      padding-top: 1px;
+      padding-bottom: 2px;
+      background-color: transparent !important;
+    }
   }
 
   &-time-gutter {

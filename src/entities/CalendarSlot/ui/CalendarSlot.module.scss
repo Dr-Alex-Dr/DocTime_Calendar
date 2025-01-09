@@ -1,8 +1,42 @@
-.slotContaienr {
+.slotContainer {
+  font-size: 12px;
+  border: 1px solid;
+  border-radius: 3px;
+  height: 100%;
+  padding: 4px;
 }
 
 .slotInfo {
+  display: flex;
+  justify-content: space-between;
+}
+
+.slotTitle {
+  font-weight: 600;
+}
+
+.slotCabinet {
+  font-weight: 500;
 }
 
 .slotStatus {
+  padding-top: 3px;
+}
+
+.confirmed {
+  background-color: #bdffdb;
+  color: #2c5a41;
+  border-color: #8fdcb2;
+}
+
+.waiting {
+  background-color: #ffebb7;
+  color: #684d08;
+  border-color: #e7c160;
+}
+
+.cancelled {
+  background-color: #ffdddd;
+  color: #721818;
+  border-color: #fdb7b7;
 }

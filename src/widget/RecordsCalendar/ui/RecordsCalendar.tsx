@@ -6,10 +6,10 @@ import { RecordsCalendarStore } from '../model/RecordsCalendarStore';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './RecordsCalendar.scss';
 import 'moment/dist/locale/ru';
-import { IEventItemParams } from '../../../entities/CalendarSlot';
 import { CalendarSlot } from '../../../entities/CalendarSlot';
 import { DateRange } from 'react-day-picker';
 import { SelectedRangeType } from '../../SmallCalendar/types';
+import { IIntervalWithDate } from '../types';
 
 export interface RecordsCalendar {
   rangeDate: DateRange | undefined;
@@ -23,32 +23,9 @@ export const RecordsCalendar: React.FC<RecordsCalendar> = createObserver((params
 
   const localizer = momentLocalizer(moment);
 
-  // const eventPropGetter = (event: any) => {
-  //   const status = event?.data?.appointment?.status;
-  //   return {
-  //     style: {
-  //       backgroundColor: statusColors[status],
-  //       color: statusFontColors[status],
-  //       border: `1px solid ${statusBorderColors[status]}`,
-  //       borderRadius: '5px',
-  //       padding: '5px',
-  //     },
-  //   };
-  // };
-
-  const components: any = {
-    event: ({ event }: EventProps<IEventItemParams>) => {
-      const data = event?.data;
-      if (data?.appointment)
-        return (
-          <CalendarSlot
-            name={data?.appointment.name}
-            status={data?.appointment.status}
-            cabinetNumber={data?.appointment.cabinetNumber}
-          />
-        );
-
-      return null;
+  const components = {
+    event: ({ event }: EventProps<IIntervalWithDate>) => {
+      return <CalendarSlot event={event} />;
     },
   };
 
@@ -76,11 +53,13 @@ export const RecordsCalendar: React.FC<RecordsCalendar> = createObserver((params
   return (
     <Calendar
       localizer={localizer}
-      view={selectedRangeType}
       events={recordIntervals}
-      formats={formats}
       components={components}
+      view={selectedRangeType}
+      onView={() => {}}
+      formats={formats}
       date={rangeDate?.to}
+      onNavigate={() => {}}
     />
   );
 }, 'RecordsCalendar');
