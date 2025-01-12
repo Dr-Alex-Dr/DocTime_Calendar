@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { createObserver } from '../../../shared/utils/MobxUtils';
 import { Calendar, Culture, DateLocalizer, EventProps, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
@@ -14,12 +14,14 @@ import { IIntervalWithDate } from '../types';
 export interface RecordsCalendar {
   rangeDate: DateRange | undefined;
   selectedRangeType: SelectedRangeType;
+  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setEventInfo: React.Dispatch<any>;
 }
 
 export const RecordsCalendar: React.FC<RecordsCalendar> = createObserver((params) => {
-  const { rangeDate, selectedRangeType } = params;
-  const recordsCalendarStore = new RecordsCalendarStore();
-  const { recordIntervals } = recordsCalendarStore;
+  const store = useMemo(() => new RecordsCalendarStore(), []);
+  const { rangeDate, selectedRangeType, setOpenModal, setEventInfo } = params;
+  const { recordIntervals } = store;
 
   const localizer = momentLocalizer(moment);
 
@@ -50,6 +52,11 @@ export const RecordsCalendar: React.FC<RecordsCalendar> = createObserver((params
     };
   }, []);
 
+  const onSelectSlot = useCallback((event: any) => {
+    setOpenModal(true);
+    setEventInfo(event);
+  }, []);
+
   return (
     <Calendar
       localizer={localizer}
@@ -60,6 +67,8 @@ export const RecordsCalendar: React.FC<RecordsCalendar> = createObserver((params
       formats={formats}
       date={rangeDate?.to}
       onNavigate={() => {}}
+      onSelectSlot={onSelectSlot}
+      selectable
     />
   );
 }, 'RecordsCalendar');

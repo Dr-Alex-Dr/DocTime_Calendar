@@ -40,12 +40,14 @@ export const CalendarSlot: React.FC<ICalendarSlotParams> = createObserver((props
   };
 
   return (
-    <div className={cn(styles.slotContainer, getColorizeClassNameByStatusId(0))}>
+    <div
+      className={cn(styles.slotContainer, getColorizeClassNameByStatusId(props.event?.status || 0))}
+    >
       <div className={styles.slotInfo}>
         <div className={styles.slotTitle}>{getDoctorName()}</div>
         <div className={styles.slotCabinet}>каб {cabinet?.number}</div>
       </div>
-      <div className={styles.slotStatus}>{getStatusNameByStatusId(0)}</div>
+      <div className={styles.slotStatus}>{getStatusNameByStatusId(props.event?.status || 0)}</div>
     </div>
   );
 }, 'CalendarSlot');

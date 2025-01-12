@@ -11,6 +11,7 @@ export const Button: React.FC<ButtonParams> = (params) => {
 
   return (
     <MUIButton
+      style={params.styles}
       className={buttonContainer}
       variant={params.variant}
       disabled={params.disabled}

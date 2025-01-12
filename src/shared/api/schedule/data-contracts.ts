@@ -121,6 +121,11 @@ export interface IIntervalOut {
    * @format date-time
    */
   end: string;
+  /**
+   * Status
+   * @default 0
+   */
+  status?: number;
 }
 
 /**
@@ -169,6 +174,11 @@ export interface IIntervalAdd {
    * @format uuid
    */
   schedule_id: string;
+  /**
+   * Status
+   * @default 0
+   */
+  status?: number;
 }
 
 /**

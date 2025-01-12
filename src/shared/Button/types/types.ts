@@ -7,4 +7,5 @@ export interface ButtonParams extends ButtonProps {
   children?: React.ReactNode;
   variant?: ButtonVariant;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
+  styles?: React.CSSProperties;
 }
