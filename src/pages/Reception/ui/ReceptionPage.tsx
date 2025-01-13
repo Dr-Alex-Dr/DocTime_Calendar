@@ -6,13 +6,14 @@ import { DateRange } from 'react-day-picker';
 import { SelectedRangeType } from '../../../widget/SmallCalendar/types';
 import { Breadcrumbs } from '../../../entities/Breadcrumbs';
 import { CreateEventModal } from '../../../widget/CreateEvent';
+import { SlotInfo } from 'react-big-calendar';
 
 export const ReceptionPage = createObserver(() => {
   const [rangeDate, setRangeDate] = useState<DateRange | undefined>();
   const [selectedRangeType, setSelectedRangeType] = useState<SelectedRangeType>('week');
 
   const [openModal, setOpenModal] = useState(false);
-  const [eventInfo, setEventInfo] = useState<any>();
+  const [eventInfo, setEventInfo] = useState<SlotInfo>();
 
   return (
     <div className={styles.receptionContainer}>

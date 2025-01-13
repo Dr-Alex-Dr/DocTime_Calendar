@@ -3,12 +3,12 @@ import { createObserver } from '../../../shared/utils/MobxUtils';
 import CloseIcon from '@mui/icons-material/Close';
 import styles from './CreateEvent.module.scss';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { SelectDoctor } from './SelectDoctor';
 import { CreateEventStore } from '../model';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { SelectCabinet } from './SelectCabinet';
 import { SelectService } from './SelectService';
 import { SelectDuration } from './SelectDuration';
@@ -17,21 +17,28 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import { Button } from '../../../shared/Button';
-import dayjs, { Dayjs } from 'dayjs';
+import moment, { Moment } from 'moment';
+import { SlotInfo } from 'react-big-calendar';
 
 export interface ICreateEventParams {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  eventInfo: any;
+  eventInfo: SlotInfo | undefined;
 }
 
 export const CreateEventModal: React.FC<ICreateEventParams> = createObserver((params) => {
-  const [selectedDate, setSelectedDate] = useState<Dayjs | null>(null);
-  const [selectedDuration, setSelectedDuration] = useState<number | null>(null);
   const createEventStore = useMemo(() => new CreateEventStore(), []);
+
+  const [selectedDate, setSelectedDate] = useState<Moment | null>(null);
+  const [selectedDuration, setSelectedDuration] = useState<number | null>(null);
   const { open, setOpen, eventInfo } = params;
 
   const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleSendForm = () => {
+    createEventStore.createInterval();
     setOpen(false);
   };
 
@@ -40,25 +47,28 @@ export const CreateEventModal: React.FC<ICreateEventParams> = createObserver((pa
       return { start: null, end: null };
     }
 
-    // Получаем время из eventInfo.start
-    const startTime = dayjs(eventInfo.start);
+    const startTime = moment(eventInfo.start);
 
-    // Формируем start
     const start = selectedDate
+      .clone()
       .hour(startTime.hour())
       .minute(startTime.minute())
       .second(startTime.second());
 
-    // Формируем end с учетом продолжительности
-    const end = start.add(selectedDuration, 'minute');
+    const end = start.clone().add(selectedDuration, 'minute');
 
     return { start, end };
   };
 
-  const { start, end } = calculateInterval();
+  useEffect(() => {
+    if (params.eventInfo?.start) {
+      setSelectedDate(moment(params.eventInfo.start));
+    }
+  }, [params.eventInfo]);
 
-  console.log('Start:', start?.toISOString());
-  console.log('End:', end?.toISOString());
+  const { start, end } = calculateInterval();
+  createEventStore.selectStartDate = start;
+  createEventStore.selectEndDate = end;
 
   return (
     <div>
@@ -75,7 +85,7 @@ export const CreateEventModal: React.FC<ICreateEventParams> = createObserver((pa
             label="Пациент"
             variant="outlined"
           />
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <LocalizationProvider dateAdapter={AdapterMoment}>
             <DemoContainer sx={{ paddingTop: 0, width: '100%' }} components={['DatePicker']}>
               <DatePicker
                 sx={{ width: '100%' }}
@@ -109,7 +119,7 @@ export const CreateEventModal: React.FC<ICreateEventParams> = createObserver((pa
               <FormControlLabel value="male" control={<Radio />} label="Вторичный прием" />
             </RadioGroup>
           </FormControl>
-          <Button styles={{ width: '100%' }} variant="contained" onClick={() => setOpen(false)}>
+          <Button styles={{ width: '100%' }} variant="contained" onClick={handleSendForm}>
             Записать
           </Button>
         </div>

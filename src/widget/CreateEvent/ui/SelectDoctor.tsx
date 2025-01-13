@@ -31,12 +31,17 @@ export const SelectDoctor: React.FC<ISelectDoctorParams> = createObserver((param
     setOptions([]);
   };
 
+  const handleChange = (event: React.SyntheticEvent, value: IDoctorOut | null) => {
+    store.selectDoctor = value;
+  };
+
   return (
     <Autocomplete
       sx={{ width: '100%' }}
       open={open}
       onOpen={handleOpen}
       onClose={handleClose}
+      onChange={handleChange}
       isOptionEqualToValue={(option, value) => option.first_name === value.first_name}
       getOptionLabel={(option) => `${option.first_name} ${option.last_name} ${option.father_name}`}
       options={options}

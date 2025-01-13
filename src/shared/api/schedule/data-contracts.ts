@@ -163,7 +163,7 @@ export interface IIntervalAdd {
    */
   end: string;
   /** Cabinet */
-  cabinet_id?: null;
+  cabinet_id?: string;
   /**
    * Doctor
    * @format uuid

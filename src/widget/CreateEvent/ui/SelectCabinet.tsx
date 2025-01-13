@@ -31,12 +31,17 @@ export const SelectCabinet: React.FC<ISelectDoctorParams> = createObserver((para
     setOptions([]);
   };
 
+  const handleChange = (event: React.SyntheticEvent, value: ICabinetOut | null) => {
+    store.selectCabinet = value;
+  };
+
   return (
     <Autocomplete
       sx={{ width: '100%' }}
       open={open}
       onOpen={handleOpen}
       onClose={handleClose}
+      onChange={handleChange}
       isOptionEqualToValue={(option, value) => option.number === value.number}
       getOptionLabel={(option) => option.number}
       options={options}
@@ -44,7 +49,7 @@ export const SelectCabinet: React.FC<ISelectDoctorParams> = createObserver((para
       renderInput={(params) => (
         <TextField
           {...params}
-          label="Специалист"
+          label="Кабинет"
           slotProps={{
             input: {
               ...params.InputProps,

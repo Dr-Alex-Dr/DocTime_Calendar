@@ -1,12 +1,13 @@
-import { observable } from 'mobx';
+import { makeAutoObservable } from 'mobx';
 import { IIntervalWithDate } from '../types';
 import { api } from '../../../shared/api/schedule/Api';
 
 export class RecordsCalendarStore {
   request = new api();
-  @observable recordIntervals: IIntervalWithDate[] | undefined = undefined;
+  recordIntervals: IIntervalWithDate[] | undefined = undefined;
 
   constructor() {
+    makeAutoObservable(this);
     this.getRecordIntervals();
   }
 

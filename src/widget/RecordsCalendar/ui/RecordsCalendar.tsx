@@ -1,6 +1,13 @@
 import { useCallback, useMemo } from 'react';
 import { createObserver } from '../../../shared/utils/MobxUtils';
-import { Calendar, Culture, DateLocalizer, EventProps, momentLocalizer } from 'react-big-calendar';
+import {
+  Calendar,
+  Culture,
+  DateLocalizer,
+  EventProps,
+  SlotInfo,
+  momentLocalizer,
+} from 'react-big-calendar';
 import moment from 'moment';
 import { RecordsCalendarStore } from '../model/RecordsCalendarStore';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
@@ -15,7 +22,7 @@ export interface RecordsCalendar {
   rangeDate: DateRange | undefined;
   selectedRangeType: SelectedRangeType;
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
-  setEventInfo: React.Dispatch<any>;
+  setEventInfo: React.Dispatch<SlotInfo>;
 }
 
 export const RecordsCalendar: React.FC<RecordsCalendar> = createObserver((params) => {
@@ -52,7 +59,7 @@ export const RecordsCalendar: React.FC<RecordsCalendar> = createObserver((params
     };
   }, []);
 
-  const onSelectSlot = useCallback((event: any) => {
+  const onSelectSlot = useCallback((event: SlotInfo) => {
     setOpenModal(true);
     setEventInfo(event);
   }, []);
