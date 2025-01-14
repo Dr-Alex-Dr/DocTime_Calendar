@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { createObserver } from '../../../shared/utils/MobxUtils';
 import { RecordsCalendar, SmallCalendar } from '../../../widget';
 import styles from './ReceptionPage.module.scss';
@@ -7,6 +7,7 @@ import { SelectedRangeType } from '../../../widget/SmallCalendar/types';
 import { Breadcrumbs } from '../../../entities/Breadcrumbs';
 import { CreateEventModal } from '../../../widget/CreateEvent';
 import { SlotInfo } from 'react-big-calendar';
+import { ReceptionStore } from '../model/ReceptionStore';
 
 export const ReceptionPage = createObserver(() => {
   const [rangeDate, setRangeDate] = useState<DateRange | undefined>();
@@ -14,6 +15,8 @@ export const ReceptionPage = createObserver(() => {
 
   const [openModal, setOpenModal] = useState(false);
   const [eventInfo, setEventInfo] = useState<SlotInfo>();
+
+  const store = useMemo(() => new ReceptionStore(), []);
 
   return (
     <div className={styles.receptionContainer}>
@@ -38,11 +41,17 @@ export const ReceptionPage = createObserver(() => {
             selectedRangeType={selectedRangeType}
             setOpenModal={setOpenModal}
             setEventInfo={setEventInfo}
+            store={store}
           />
         </div>
       </div>
 
-      <CreateEventModal open={openModal} setOpen={setOpenModal} eventInfo={eventInfo} />
+      <CreateEventModal
+        open={openModal}
+        setOpen={setOpenModal}
+        eventInfo={eventInfo}
+        store={store}
+      />
     </div>
   );
 }, 'ReceptionPage');

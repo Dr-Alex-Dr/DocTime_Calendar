@@ -1,9 +1,10 @@
 import { makeAutoObservable, observable } from 'mobx';
-import { ICabinetOut, IDoctorOut } from '../../../shared/api/schedule/data-contracts';
 import { api } from '../../../shared/api/schedule/Api';
+import { ICabinetOut, IDoctorOut } from '../../../shared/api/schedule/data-contracts';
 import { Moment } from 'moment';
+import { IIntervalWithDate } from '../../../widget';
 
-export class CreateEventStore {
+export class ReceptionStore {
   request = new api();
   @observable doctors: IDoctorOut[] = [];
   @observable cabinets: ICabinetOut[] = [];
@@ -14,9 +15,24 @@ export class CreateEventStore {
   selectStartDate: Moment | null = null;
   selectEndDate: Moment | null = null;
 
+  recordIntervals: IIntervalWithDate[] | undefined = undefined;
+
   constructor() {
     makeAutoObservable(this);
+    this.getRecordIntervals();
   }
+
+  getRecordIntervals = async () => {
+    try {
+      const response = await this.request.appsIntervalsApiHandlersAll();
+
+      this.recordIntervals = response.data.map((res) => {
+        return { ...res, start: new Date(res.start), end: new Date(res.end) };
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   getAllDoctors = async () => {
     try {
@@ -58,6 +74,8 @@ export class CreateEventStore {
           schedule_id: 'd7a1e5ce-9252-42aa-929d-6b1a21004c77',
           status: 1,
         });
+
+        await this.getRecordIntervals();
       }
     } catch (error) {
       console.log(error);

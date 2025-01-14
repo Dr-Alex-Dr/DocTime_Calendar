@@ -7,8 +7,7 @@ import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { SelectDoctor } from './SelectDoctor';
-import { CreateEventStore } from '../model';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SelectCabinet } from './SelectCabinet';
 import { SelectService } from './SelectService';
 import { SelectDuration } from './SelectDuration';
@@ -19,15 +18,17 @@ import FormControl from '@mui/material/FormControl';
 import { Button } from '../../../shared/Button';
 import moment, { Moment } from 'moment';
 import { SlotInfo } from 'react-big-calendar';
+import { ReceptionStore } from '../../../pages/Reception/model/ReceptionStore';
 
 export interface ICreateEventParams {
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   eventInfo: SlotInfo | undefined;
+  store: ReceptionStore;
 }
 
 export const CreateEventModal: React.FC<ICreateEventParams> = createObserver((params) => {
-  const createEventStore = useMemo(() => new CreateEventStore(), []);
+  const { store } = params;
 
   const [selectedDate, setSelectedDate] = useState<Moment | null>(null);
   const [selectedDuration, setSelectedDuration] = useState<number | null>(null);
@@ -38,7 +39,7 @@ export const CreateEventModal: React.FC<ICreateEventParams> = createObserver((pa
   };
 
   const handleSendForm = () => {
-    createEventStore.createInterval();
+    store.createInterval();
     setOpen(false);
   };
 
@@ -67,8 +68,8 @@ export const CreateEventModal: React.FC<ICreateEventParams> = createObserver((pa
   }, [params.eventInfo]);
 
   const { start, end } = calculateInterval();
-  createEventStore.selectStartDate = start;
-  createEventStore.selectEndDate = end;
+  store.selectStartDate = start;
+  store.selectEndDate = end;
 
   return (
     <div>
@@ -78,15 +79,8 @@ export const CreateEventModal: React.FC<ICreateEventParams> = createObserver((pa
             Запись пациента на прием
             <CloseIcon onClick={handleClose} />
           </div>
-          <SelectDoctor store={createEventStore} />
-          <TextField
-            sx={{ width: '100%' }}
-            id="outlined-basic"
-            label="Пациент"
-            variant="outlined"
-          />
           <LocalizationProvider dateAdapter={AdapterMoment}>
-            <DemoContainer sx={{ paddingTop: 0, width: '100%' }} components={['DatePicker']}>
+            <DemoContainer sx={{ width: '100%' }} components={['DatePicker']}>
               <DatePicker
                 sx={{ width: '100%' }}
                 label="Дата"
@@ -95,7 +89,15 @@ export const CreateEventModal: React.FC<ICreateEventParams> = createObserver((pa
               />
             </DemoContainer>
           </LocalizationProvider>
-          <SelectCabinet store={createEventStore} />
+          <SelectDoctor store={store} />
+          <TextField
+            sx={{ width: '100%' }}
+            id="outlined-basic"
+            label="Пациент"
+            variant="outlined"
+          />
+
+          <SelectCabinet store={store} />
           <SelectService />
           <TextField sx={{ width: '100%' }} id="standard-basic" label="Почта" variant="standard" />
           <TextField

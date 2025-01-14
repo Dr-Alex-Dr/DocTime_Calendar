@@ -9,7 +9,6 @@ import {
   momentLocalizer,
 } from 'react-big-calendar';
 import moment from 'moment';
-import { RecordsCalendarStore } from '../model/RecordsCalendarStore';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './RecordsCalendar.scss';
 import 'moment/dist/locale/ru';
@@ -17,18 +16,19 @@ import { CalendarSlot } from '../../../entities/CalendarSlot';
 import { DateRange } from 'react-day-picker';
 import { SelectedRangeType } from '../../SmallCalendar/types';
 import { IIntervalWithDate } from '../types';
+import { ReceptionStore } from '../../../pages/Reception/model/ReceptionStore';
 
 export interface RecordsCalendar {
   rangeDate: DateRange | undefined;
   selectedRangeType: SelectedRangeType;
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
   setEventInfo: React.Dispatch<SlotInfo>;
+  store: ReceptionStore;
 }
 
 export const RecordsCalendar: React.FC<RecordsCalendar> = createObserver((params) => {
-  const store = useMemo(() => new RecordsCalendarStore(), []);
   const { rangeDate, selectedRangeType, setOpenModal, setEventInfo } = params;
-  const { recordIntervals } = store;
+  const { recordIntervals } = params.store;
 
   const localizer = momentLocalizer(moment);
 

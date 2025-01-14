@@ -2,7 +2,7 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import CircularProgress from '@mui/material/CircularProgress';
 import { CreateEventStore } from '../model';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { IDoctorOut } from '../../../shared/api/schedule/data-contracts';
 import { createObserver } from '../../../shared/utils/MobxUtils';
 
@@ -25,6 +25,12 @@ export const SelectDoctor: React.FC<ISelectDoctorParams> = createObserver((param
       setOptions([...doctors]);
     }
   };
+
+  useEffect(() => {
+    if (doctors) {
+      setOptions([...doctors]);
+    }
+  }, [doctors]);
 
   const handleClose = () => {
     setOpen(false);
