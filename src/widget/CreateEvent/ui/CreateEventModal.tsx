@@ -1,14 +1,10 @@
-import { Dialog, TextField } from '@mui/material';
+import { TextField } from '@mui/material';
 import { createObserver } from '../../../shared/utils/MobxUtils';
-import CloseIcon from '@mui/icons-material/Close';
-import styles from './CreateEvent.module.scss';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterMoment } from '@mui/x-date-pickers/AdapterMoment';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { SelectDoctor } from './SelectDoctor';
 import { useEffect, useState } from 'react';
-import { SelectCabinet } from './SelectCabinet';
+import { CabinetSelector } from './CabinetSelector';
 import { SelectService } from './SelectService';
 import { SelectDuration } from './SelectDuration';
 import Radio from '@mui/material/Radio';
@@ -17,38 +13,32 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import { Button } from '../../../shared/Button';
 import moment, { Moment } from 'moment';
-import { SlotInfo } from 'react-big-calendar';
 import { ReceptionStore } from '../../../pages/Reception/model/ReceptionStore';
+import { Modal } from '../../../shared/Modal/ui';
+import { DoctorSelector } from './DoctorSelector';
 
 export interface ICreateEventParams {
-  open: boolean;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  eventInfo: SlotInfo | undefined;
   store: ReceptionStore;
 }
 
 export const CreateEventModal: React.FC<ICreateEventParams> = createObserver((params) => {
   const { store } = params;
+  const { createEventModal, createInterval, slotInfo } = store;
 
   const [selectedDate, setSelectedDate] = useState<Moment | null>(null);
   const [selectedDuration, setSelectedDuration] = useState<number | null>(null);
-  const { open, setOpen, eventInfo } = params;
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   const handleSendForm = () => {
-    store.createInterval();
-    setOpen(false);
+    createInterval();
+    createEventModal.hide();
   };
 
   const calculateInterval = () => {
-    if (!eventInfo?.start || !selectedDate || selectedDuration === null) {
+    if (!slotInfo?.start || !selectedDate || selectedDuration === null) {
       return { start: null, end: null };
     }
 
-    const startTime = moment(eventInfo.start);
+    const startTime = moment(store.slotInfo?.start);
 
     const start = selectedDate
       .clone()
@@ -62,70 +52,54 @@ export const CreateEventModal: React.FC<ICreateEventParams> = createObserver((pa
   };
 
   useEffect(() => {
-    if (params.eventInfo?.start) {
-      setSelectedDate(moment(params.eventInfo.start));
+    if (store.slotInfo?.start) {
+      setSelectedDate(moment(store.slotInfo.start));
     }
-  }, [params.eventInfo]);
+  }, [store.slotInfo]);
 
   const { start, end } = calculateInterval();
   store.selectStartDate = start;
   store.selectEndDate = end;
 
   return (
-    <div>
-      <Dialog open={open} onClose={handleClose}>
-        <div className={styles.container}>
-          <div className={styles.header}>
-            Запись пациента на прием
-            <CloseIcon onClick={handleClose} />
-          </div>
-          <LocalizationProvider dateAdapter={AdapterMoment}>
-            <DemoContainer sx={{ width: '100%' }} components={['DatePicker']}>
-              <DatePicker
-                sx={{ width: '100%' }}
-                label="Дата"
-                value={selectedDate}
-                onChange={(newValue) => setSelectedDate(newValue)}
-              />
-            </DemoContainer>
-          </LocalizationProvider>
-          <SelectDoctor store={store} />
-          <TextField
-            sx={{ width: '100%' }}
-            id="outlined-basic"
-            label="Пациент"
-            variant="outlined"
-          />
+    <Modal
+      open={createEventModal.shown}
+      handleClose={createEventModal.hide}
+      title="Запись пациента на прием"
+    >
+      <LocalizationProvider dateAdapter={AdapterMoment}>
+        <DatePicker
+          label="Дата"
+          value={selectedDate}
+          onChange={(newValue) => setSelectedDate(newValue)}
+        />
+      </LocalizationProvider>
+      <DoctorSelector store={store} />
 
-          <SelectCabinet store={store} />
-          <SelectService />
-          <TextField sx={{ width: '100%' }} id="standard-basic" label="Почта" variant="standard" />
-          <TextField
-            sx={{ width: '100%' }}
-            id="standard-basic"
-            label="Номер телефона"
-            variant="standard"
-          />
+      <TextField id="outlined-basic" label="Пациент" variant="outlined" />
 
-          <SelectDuration
-            selectedDuration={selectedDuration}
-            setSelectedDuration={setSelectedDuration}
-          />
-          <FormControl>
-            <RadioGroup
-              aria-labelledby="demo-radio-buttons-group-label"
-              defaultValue="female"
-              name="radio-buttons-group"
-            >
-              <FormControlLabel value="female" control={<Radio />} label="Первичный прием" />
-              <FormControlLabel value="male" control={<Radio />} label="Вторичный прием" />
-            </RadioGroup>
-          </FormControl>
-          <Button styles={{ width: '100%' }} variant="contained" onClick={handleSendForm}>
-            Записать
-          </Button>
-        </div>
-      </Dialog>
-    </div>
+      <CabinetSelector store={store} />
+      <SelectService />
+      <TextField id="standard-basic" label="Почта" variant="standard" />
+      <TextField id="standard-basic" label="Номер телефона" variant="standard" />
+
+      <SelectDuration
+        selectedDuration={selectedDuration}
+        setSelectedDuration={setSelectedDuration}
+      />
+      <FormControl>
+        <RadioGroup
+          aria-labelledby="demo-radio-buttons-group-label"
+          defaultValue="female"
+          name="radio-buttons-group"
+        >
+          <FormControlLabel value="female" control={<Radio />} label="Первичный прием" />
+          <FormControlLabel value="male" control={<Radio />} label="Вторичный прием" />
+        </RadioGroup>
+      </FormControl>
+      <Button styles={{ width: '100%' }} variant="contained" onClick={handleSendForm}>
+        Записать
+      </Button>
+    </Modal>
   );
 }, 'CreateEvent');

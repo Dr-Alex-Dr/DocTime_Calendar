@@ -6,9 +6,9 @@ import { createObserver } from '../shared/utils/MobxUtils';
 export const App = createObserver(() => {
   return (
     <div>
-      <img style={{ paddingBottom: 12, width: '100%' }} src="../images/Header.svg" />
+      <img style={{ paddingBottom: 12, width: '100%' }} src="./src/images/Header.svg" />
       <div style={{ display: 'flex' }}>
-        <img style={{ paddingBottom: 12 }} src="../images/Frame 74.svg" />
+        <img style={{ paddingBottom: 12 }} src="./src/images/Frame 74.svg" />
         <ReceptionPage />
       </div>
     </div>

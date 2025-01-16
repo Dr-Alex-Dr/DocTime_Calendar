@@ -1,21 +1,27 @@
-import { makeAutoObservable, observable } from 'mobx';
+import { makeAutoObservable } from 'mobx';
 import { api } from '../../../shared/api/schedule/Api';
 import { ICabinetOut, IDoctorOut } from '../../../shared/api/schedule/data-contracts';
 import { Moment } from 'moment';
 import { IIntervalWithDate } from '../../../widget';
+import { ModalStore } from '../../../shared/utils';
+import { SlotInfo } from 'react-big-calendar';
 
 export class ReceptionStore {
-  request = new api();
-  @observable doctors: IDoctorOut[] = [];
-  @observable cabinets: ICabinetOut[] = [];
-  @observable isLoading = false;
+  private apiResource = new api();
+
+  doctors: IDoctorOut[] = [];
+  cabinets: ICabinetOut[] = [];
+  recordIntervals: IIntervalWithDate[] | undefined = undefined;
+  createEventModal = new ModalStore();
+  slotInfo: SlotInfo | null = null;
+
+  isLoadingDoctors = false;
+  isLoadingCabinets = false;
 
   selectDoctor: IDoctorOut | null = null;
   selectCabinet: ICabinetOut | null = null;
   selectStartDate: Moment | null = null;
   selectEndDate: Moment | null = null;
-
-  recordIntervals: IIntervalWithDate[] | undefined = undefined;
 
   constructor() {
     makeAutoObservable(this);
@@ -24,7 +30,7 @@ export class ReceptionStore {
 
   getRecordIntervals = async () => {
     try {
-      const response = await this.request.appsIntervalsApiHandlersAll();
+      const response = await this.apiResource.appsIntervalsApiHandlersAll();
 
       this.recordIntervals = response.data.map((res) => {
         return { ...res, start: new Date(res.start), end: new Date(res.end) };
@@ -36,25 +42,25 @@ export class ReceptionStore {
 
   getAllDoctors = async () => {
     try {
-      this.isLoading = true;
-      const response = await this.request.appsDoctorsApiHandlersAll();
+      this.isLoadingDoctors = true;
+      const response = await this.apiResource.appsDoctorsApiHandlersAll();
       this.doctors = response.data;
     } catch (error) {
       console.log(error);
     } finally {
-      this.isLoading = false;
+      this.isLoadingDoctors = false;
     }
   };
 
   getAllCabinets = async () => {
     try {
-      this.isLoading = true;
-      const response = await this.request.appsCabinetsApiHandlersAll();
+      this.isLoadingCabinets = true;
+      const response = await this.apiResource.appsCabinetsApiHandlersAll();
       this.cabinets = response.data;
     } catch (error) {
       console.log(error);
     } finally {
-      this.isLoading = false;
+      this.isLoadingCabinets = false;
     }
   };
 
@@ -66,7 +72,7 @@ export class ReceptionStore {
         this.selectCabinet?.id &&
         this.selectDoctor?.id
       ) {
-        await this.request.appsIntervalsApiHandlersAdd({
+        await this.apiResource.appsIntervalsApiHandlersAdd({
           start: this.selectStartDate.toISOString(),
           end: this.selectEndDate.toISOString(),
           cabinet_id: this.selectCabinet?.id,

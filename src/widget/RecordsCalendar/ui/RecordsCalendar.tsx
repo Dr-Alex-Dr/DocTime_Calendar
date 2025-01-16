@@ -21,14 +21,12 @@ import { ReceptionStore } from '../../../pages/Reception/model/ReceptionStore';
 export interface RecordsCalendar {
   rangeDate: DateRange | undefined;
   selectedRangeType: SelectedRangeType;
-  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
-  setEventInfo: React.Dispatch<SlotInfo>;
   store: ReceptionStore;
 }
 
 export const RecordsCalendar: React.FC<RecordsCalendar> = createObserver((params) => {
-  const { rangeDate, selectedRangeType, setOpenModal, setEventInfo } = params;
-  const { recordIntervals } = params.store;
+  const { rangeDate, selectedRangeType, store } = params;
+  const { recordIntervals } = store;
 
   const localizer = momentLocalizer(moment);
 
@@ -60,8 +58,8 @@ export const RecordsCalendar: React.FC<RecordsCalendar> = createObserver((params
   }, []);
 
   const onSelectSlot = useCallback((event: SlotInfo) => {
-    setOpenModal(true);
-    setEventInfo(event);
+    store.createEventModal.show();
+    store.slotInfo = event;
   }, []);
 
   return (

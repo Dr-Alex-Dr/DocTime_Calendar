@@ -6,24 +6,20 @@ import { DateRange } from 'react-day-picker';
 import { SelectedRangeType } from '../../../widget/SmallCalendar/types';
 import { Breadcrumbs } from '../../../entities/Breadcrumbs';
 import { CreateEventModal } from '../../../widget/CreateEvent';
-import { SlotInfo } from 'react-big-calendar';
 import { ReceptionStore } from '../model/ReceptionStore';
 
 export const ReceptionPage = createObserver(() => {
+  const store = useMemo(() => new ReceptionStore(), []);
+
   const [rangeDate, setRangeDate] = useState<DateRange | undefined>();
   const [selectedRangeType, setSelectedRangeType] = useState<SelectedRangeType>('week');
-
-  const [openModal, setOpenModal] = useState(false);
-  const [eventInfo, setEventInfo] = useState<SlotInfo>();
-
-  const store = useMemo(() => new ReceptionStore(), []);
 
   return (
     <div className={styles.receptionContainer}>
       <Breadcrumbs title="Главная" />
       <div style={{ display: 'flex', justifyContent: 'space-between' }}>
         <h2 className={styles.receptionTitle}>Расписание на неделю</h2>
-        <img style={{ marginRight: 16 }} src="../../../../images/_Fab_.svg" />
+        <img style={{ marginRight: 16 }} src="./src/images/_Fab_.svg" />
       </div>
 
       <div className={styles.calendarContainer}>
@@ -39,19 +35,12 @@ export const ReceptionPage = createObserver(() => {
           <RecordsCalendar
             rangeDate={rangeDate}
             selectedRangeType={selectedRangeType}
-            setOpenModal={setOpenModal}
-            setEventInfo={setEventInfo}
             store={store}
           />
         </div>
       </div>
 
-      <CreateEventModal
-        open={openModal}
-        setOpen={setOpenModal}
-        eventInfo={eventInfo}
-        store={store}
-      />
+      <CreateEventModal store={store} />
     </div>
   );
 }, 'ReceptionPage');
