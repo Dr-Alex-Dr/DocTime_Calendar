@@ -1,6 +1,5 @@
 /**
  * CabinetOut
- * Schema for output cabinet.
  */
 export interface ICabinetOut {
   /**
