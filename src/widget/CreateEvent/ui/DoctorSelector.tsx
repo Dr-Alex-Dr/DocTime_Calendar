@@ -16,13 +16,13 @@ export const DoctorSelector: React.FC<IDoctorSelectorParams> = createObserver(({
   };
 
   const handleChange = (value: IDoctorOut | null) => {
-    store.selectDoctor = value;
+    store.selectedIntervalValues.doctor = value;
   };
 
   return (
     <RemoteDataSelector
       label="Специалист"
-      isLoading={store.isLoadingDoctors}
+      isLoading={store.isLoading.doctors}
       options={store.doctors}
       onOpen={handleOpen}
       onChange={handleChange}

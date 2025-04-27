@@ -1,27 +1,40 @@
 import { makeAutoObservable } from 'mobx';
 import { api } from '../../../shared/api/schedule/Api';
-import { ICabinetOut, IDoctorOut } from '../../../shared/api/schedule/data-contracts';
+import { ICabinetOut, IDoctorOut, IIntervalOut } from '../../../shared/api/schedule/data-contracts';
 import { Moment } from 'moment';
 import { IIntervalWithDate } from '../../../widget';
 import { ModalStore } from '../../../shared/utils';
 import { SlotInfo } from 'react-big-calendar';
+import moment from 'moment';
+
+const CONFIG = {
+  SCHEDULE_ID: '5303ab13-9553-423e-9176-3d7e841e0711',
+  EVENT_STATUS: 1,
+} as const;
+
+interface ISelectedIntervalValues {
+  doctor: IDoctorOut | null;
+  cabinet: ICabinetOut | null;
+}
 
 export class ReceptionStore {
-  private apiResource = new api();
+  private readonly apiResource = new api();
 
   doctors: IDoctorOut[] = [];
   cabinets: ICabinetOut[] = [];
   recordIntervals: IIntervalWithDate[] | undefined = undefined;
-  createEventModal = new ModalStore();
+  recordCreationModal = new ModalStore();
   slotInfo: SlotInfo | null = null;
 
-  isLoadingDoctors = false;
-  isLoadingCabinets = false;
+  isLoading = {
+    doctors: false,
+    cabinets: false,
+  };
 
-  selectDoctor: IDoctorOut | null = null;
-  selectCabinet: ICabinetOut | null = null;
-  selectStartDate: Moment | null = null;
-  selectEndDate: Moment | null = null;
+  selectedIntervalValues: ISelectedIntervalValues = {
+    doctor: null,
+    cabinet: null,
+  };
 
   constructor() {
     makeAutoObservable(this);
@@ -31,60 +44,82 @@ export class ReceptionStore {
   getRecordIntervals = async () => {
     try {
       const response = await this.apiResource.appsIntervalsApiHandlersAll();
-
-      this.recordIntervals = response.data.map((res) => {
-        return { ...res, start: new Date(res.start), end: new Date(res.end) };
-      });
+      this.recordIntervals = response.data.map((res: IIntervalOut) => ({
+        ...res,
+        start: new Date(res.start),
+        end: new Date(res.end),
+      }));
     } catch (error) {
-      console.log(error);
+      this.handleError('Не удалось загрузить интервалы', error);
     }
   };
 
   getAllDoctors = async () => {
     try {
-      this.isLoadingDoctors = true;
+      this.isLoading.doctors = true;
       const response = await this.apiResource.appsDoctorsApiHandlersAll();
       this.doctors = response.data;
     } catch (error) {
-      console.log(error);
+      this.handleError('Не удалось загрузить список врачей', error);
     } finally {
-      this.isLoadingDoctors = false;
+      this.isLoading.doctors = false;
     }
   };
 
   getAllCabinets = async () => {
     try {
-      this.isLoadingCabinets = true;
+      this.isLoading.cabinets = true;
       const response = await this.apiResource.appsCabinetsApiHandlersAll();
       this.cabinets = response.data;
     } catch (error) {
-      console.log(error);
+      this.handleError('Не удалось загрузить список кабинетов', error);
     } finally {
-      this.isLoadingCabinets = false;
+      this.isLoading.cabinets = false;
     }
+  };
+
+  setSelectedDate = (date: Moment | null) => {
+    if (!date || !this.slotInfo?.start) {
+      return;
+    }
+
+    this.slotInfo.start = date.toDate();
+  };
+
+  setAppointmentDuration = (duration: number | null) => {
+    if (!this.slotInfo?.start || duration === null) {
+      return;
+    }
+
+    const start = moment(this.slotInfo.start);
+    this.slotInfo.end = start.clone().add(duration, 'minute').toDate();
   };
 
   createInterval = async () => {
     try {
-      if (
-        this.selectStartDate &&
-        this.selectEndDate &&
-        this.selectCabinet?.id &&
-        this.selectDoctor?.id
-      ) {
-        await this.apiResource.appsIntervalsApiHandlersAdd({
-          start: this.selectStartDate.toISOString(),
-          end: this.selectEndDate.toISOString(),
-          cabinet_id: this.selectCabinet?.id,
-          doctor_id: this.selectDoctor?.id,
-          schedule_id: 'd7a1e5ce-9252-42aa-929d-6b1a21004c77',
-          status: 1,
-        });
+      const { doctor, cabinet } = this.selectedIntervalValues;
 
-        await this.getRecordIntervals();
+      if (!doctor?.id || !cabinet?.id || !this.slotInfo?.start || !this.slotInfo?.end) {
+        return;
       }
+
+      await this.apiResource.appsIntervalsApiHandlersAdd({
+        start: moment(this.slotInfo.start).format('YYYY-MM-DDTHH:mm:ss'),
+        end: moment(this.slotInfo.end).format('YYYY-MM-DDTHH:mm:ss'),
+        cabinet_id: cabinet.id,
+        doctor_id: doctor.id,
+        schedule_id: CONFIG.SCHEDULE_ID,
+        status: CONFIG.EVENT_STATUS,
+      });
+
+      await this.getRecordIntervals();
+      this.recordCreationModal.hide();
     } catch (error) {
-      console.log(error);
+      this.handleError('Не удалось создать интервал', error);
     }
   };
+
+  private handleError(message: string, error: unknown) {
+    console.error(message, error);
+  }
 }

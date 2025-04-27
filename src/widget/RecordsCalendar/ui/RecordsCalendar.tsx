@@ -58,7 +58,7 @@ export const RecordsCalendar: React.FC<RecordsCalendar> = createObserver((params
   }, []);
 
   const onSelectSlot = useCallback((event: SlotInfo) => {
-    store.createEventModal.show();
+    store.recordCreationModal.show();
     store.slotInfo = event;
   }, []);
 

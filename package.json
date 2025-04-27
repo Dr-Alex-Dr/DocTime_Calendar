@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"lcp --proxyUrl https://64v.ru\" \"vite\"",
+    "dev": "concurrently \"lcp --proxyUrl http://176.108.252.47\" \"vite\"",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",

@@ -2,7 +2,7 @@ import { Button } from '../../../shared/Button';
 
 export interface ISelectDurationParams {
   selectedDuration: number | null;
-  setSelectedDuration: React.Dispatch<React.SetStateAction<number | null>>;
+  setSelectedDuration: (duration: number | null) => void;
 }
 
 export const SelectDuration: React.FC<ISelectDurationParams> = (params) => {

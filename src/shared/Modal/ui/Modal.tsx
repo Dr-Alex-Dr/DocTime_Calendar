@@ -12,7 +12,7 @@ export const Modal: React.FC<IModalParams> = createObserver(
           <div className={styles.container}>
             <div className={styles.header}>
               {title}
-              <CloseIcon onClick={handleClose} />
+              <CloseIcon className={styles.closeIcon} onClick={handleClose} />
             </div>
             {children}
           </div>

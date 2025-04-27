@@ -16,13 +16,13 @@ export const CabinetSelector: React.FC<ICabinetSelectorParams> = createObserver(
   };
 
   const handleChange = (value: ICabinetOut | null) => {
-    store.selectCabinet = value;
+    store.selectedIntervalValues.cabinet = value;
   };
 
   return (
     <RemoteDataSelector
       label="Кабинет"
-      isLoading={store.isLoadingCabinets}
+      isLoading={store.isLoading.cabinets}
       options={store.cabinets}
       onOpen={handleOpen}
       onChange={handleChange}
