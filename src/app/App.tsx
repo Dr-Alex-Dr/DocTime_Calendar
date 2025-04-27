@@ -1,16 +1,20 @@
 import './styles/index.scss';
 import 'moment/locale/ru';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ReceptionPage } from '../pages/Reception';
+import { TasksPage } from '../pages/Tasks';
 import { createObserver } from '../shared/utils/MobxUtils';
+import { Layout } from './Layout';
 
 export const App = createObserver(() => {
   return (
-    <div>
-      <img style={{ paddingBottom: 12, width: '100%' }} src="./src/images/Header.svg" />
-      <div style={{ display: 'flex' }}>
-        <img style={{ paddingBottom: 12 }} src="./src/images/Frame 74.svg" />
-        <ReceptionPage />
-      </div>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<ReceptionPage />} />
+          <Route path="tasks" element={<TasksPage />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
   );
 }, 'App');
