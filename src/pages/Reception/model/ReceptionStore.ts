@@ -1,21 +1,15 @@
-import { makeAutoObservable } from 'mobx';
+import { makeAutoObservable, observable } from 'mobx';
 import { api } from '../../../shared/api/schedule/Api';
 import { ICabinetOut, IDoctorOut, IIntervalOut } from '../../../shared/api/schedule/data-contracts';
 import { Moment } from 'moment';
 import { IIntervalWithDate } from '../../../widget';
 import { ModalStore } from '../../../shared/utils';
-import { SlotInfo } from 'react-big-calendar';
 import moment from 'moment';
 
 const CONFIG = {
   SCHEDULE_ID: '5303ab13-9553-423e-9176-3d7e841e0711',
   EVENT_STATUS: 1,
 } as const;
-
-interface ISelectedIntervalValues {
-  doctor: IDoctorOut | null;
-  cabinet: ICabinetOut | null;
-}
 
 export class ReceptionStore {
   private readonly apiResource = new api();
@@ -24,16 +18,11 @@ export class ReceptionStore {
   cabinets: ICabinetOut[] = [];
   recordIntervals: IIntervalWithDate[] | undefined = undefined;
   recordCreationModal = new ModalStore();
-  slotInfo: SlotInfo | null = null;
+  @observable.ref slotInfo: IIntervalWithDate | null = null;
 
   isLoading = {
     doctors: false,
     cabinets: false,
-  };
-
-  selectedIntervalValues: ISelectedIntervalValues = {
-    doctor: null,
-    cabinet: null,
   };
 
   constructor() {
@@ -97,17 +86,20 @@ export class ReceptionStore {
 
   createInterval = async () => {
     try {
-      const { doctor, cabinet } = this.selectedIntervalValues;
-
-      if (!doctor?.id || !cabinet?.id || !this.slotInfo?.start || !this.slotInfo?.end) {
+      if (
+        !this.slotInfo?.doctor?.id ||
+        !this.slotInfo?.cabinet?.id ||
+        !this.slotInfo?.start ||
+        !this.slotInfo?.end
+      ) {
         return;
       }
 
       await this.apiResource.appsIntervalsApiHandlersAdd({
         start: moment(this.slotInfo.start).format('YYYY-MM-DDTHH:mm:ss'),
         end: moment(this.slotInfo.end).format('YYYY-MM-DDTHH:mm:ss'),
-        cabinet_id: cabinet.id,
-        doctor_id: doctor.id,
+        cabinet_id: this.slotInfo.cabinet.id,
+        doctor_id: this.slotInfo.doctor.id,
         schedule_id: CONFIG.SCHEDULE_ID,
         status: CONFIG.EVENT_STATUS,
       });
@@ -117,6 +109,11 @@ export class ReceptionStore {
     } catch (error) {
       this.handleError('Не удалось создать интервал', error);
     }
+  };
+
+  setSlotInfo = (info: IIntervalWithDate | null) => {
+    console.log('info', info?.cabinet);
+    this.slotInfo = info;
   };
 
   private handleError(message: string, error: unknown) {

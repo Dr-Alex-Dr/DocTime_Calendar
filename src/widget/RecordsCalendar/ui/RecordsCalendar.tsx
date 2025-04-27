@@ -17,6 +17,7 @@ import { DateRange } from 'react-day-picker';
 import { SelectedRangeType } from '../../SmallCalendar/types';
 import { IIntervalWithDate } from '../types';
 import { ReceptionStore } from '../../../pages/Reception/model/ReceptionStore';
+import { IDoctorOut, IScheduleOut } from '../../../shared/api/schedule/data-contracts';
 
 export interface RecordsCalendar {
   rangeDate: DateRange | undefined;
@@ -59,7 +60,18 @@ export const RecordsCalendar: React.FC<RecordsCalendar> = createObserver((params
 
   const onSelectSlot = useCallback((event: SlotInfo) => {
     store.recordCreationModal.show();
-    store.slotInfo = event;
+    store.setSlotInfo({
+      start: event.start,
+      end: event.end,
+      doctor: {} as IDoctorOut,
+      schedule: {} as IScheduleOut,
+      cabinet: null,
+    });
+  }, []);
+
+  const onSelectEvent = useCallback((event: IIntervalWithDate) => {
+    store.recordCreationModal.show();
+    store.setSlotInfo(event);
   }, []);
 
   return (
@@ -73,6 +85,7 @@ export const RecordsCalendar: React.FC<RecordsCalendar> = createObserver((params
       date={rangeDate?.to}
       onNavigate={() => {}}
       onSelectSlot={onSelectSlot}
+      onSelectEvent={onSelectEvent}
       selectable
     />
   );

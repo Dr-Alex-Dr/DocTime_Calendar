@@ -16,7 +16,9 @@ export const CabinetSelector: React.FC<ICabinetSelectorParams> = createObserver(
   };
 
   const handleChange = (value: ICabinetOut | null) => {
-    store.selectedIntervalValues.cabinet = value;
+    if (store.slotInfo) {
+      store.slotInfo.cabinet = value;
+    }
   };
 
   return (

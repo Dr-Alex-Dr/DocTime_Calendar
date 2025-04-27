@@ -16,7 +16,9 @@ export const DoctorSelector: React.FC<IDoctorSelectorParams> = createObserver(({
   };
 
   const handleChange = (value: IDoctorOut | null) => {
-    store.selectedIntervalValues.doctor = value;
+    if (store.slotInfo && value) {
+      store.slotInfo.doctor = value;
+    }
   };
 
   return (
