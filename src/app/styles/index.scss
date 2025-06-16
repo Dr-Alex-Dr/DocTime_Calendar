@@ -1,0 +1,9 @@
+@use './global.scss';
+@use './normalize.scss';
+
+body {
+  font-family: Roboto;
+  background-color: $backgroundColor;
+  overflow: hidden;
+  font-weight: normal;
+}

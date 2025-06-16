@@ -1,0 +1,28 @@
+.tasksPage {
+  display: flex;
+}
+
+.tasksContainer {
+  padding: 16px 0 16px 16px;
+}
+
+.tasksTitle {
+  font-size: 34px;
+  font-weight: normal;
+  padding: 16px 0;
+  margin: 0;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 190px;
+}
+
+.skeleton {
+  border-radius: 16px;
+  margin-bottom: 16px;
+  min-height: 90px;
+  max-height: 90px;
+}
