@@ -7,7 +7,7 @@ import { ModalStore } from '../../../shared/utils';
 import moment from 'moment';
 
 const CONFIG = {
-  SCHEDULE_ID: '5303ab13-9553-423e-9176-3d7e841e0711',
+  SCHEDULE_ID: '68da45e0-24e5-4300-a8a2-e10583cde45a',
   EVENT_STATUS: 1,
 } as const;
 

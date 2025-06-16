@@ -5,11 +5,11 @@ import CloseIcon from '@mui/icons-material/Close';
 import styles from './Modal.module.scss';
 
 export const Modal: React.FC<IModalParams> = createObserver(
-  ({ open, handleClose, title, children }) => {
+  ({ open, handleClose, title, children, height }) => {
     return (
       <div>
         <Dialog open={open} onClose={handleClose}>
-          <div className={styles.container}>
+          <div className={styles.container} style={{ height: height ?? 700 }}>
             <div className={styles.header}>
               {title}
               <CloseIcon className={styles.closeIcon} onClick={handleClose} />

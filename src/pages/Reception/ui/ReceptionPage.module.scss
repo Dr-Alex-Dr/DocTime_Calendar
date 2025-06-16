@@ -9,6 +9,7 @@
 
 .calendarContainer {
   display: flex;
+  margin-right: 16px;
 }
 
 .receptionTitle {
@@ -21,4 +22,10 @@
 .recorderCalendarContainer {
   margin-right: 16px;
   width: 100%;
+}
+
+.receptionHeader {
+  display: flex;
+  justify-content: space-between;
+  margin-right: 16px;
 }

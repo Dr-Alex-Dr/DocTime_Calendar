@@ -5,4 +5,5 @@ export interface IModalParams {
   handleClose?: () => void;
   title?: string;
   children?: ReactNode;
+  height?: number;
 }

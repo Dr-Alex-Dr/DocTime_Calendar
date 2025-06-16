@@ -1,12 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Header } from '../widget/Header';
+import { Sidebar } from '../widget/Sidebar';
+import classNames from 'classnames';
+import styles from './Layout.module.scss';
 
 export const Layout: React.FC = () => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
   return (
-    <div>
+    <div className={styles.layout}>
       <Header />
-      <Outlet />
+      <Sidebar isExpanded={isExpanded} onExpandChange={setIsExpanded} />
+      <main className={classNames(styles.main, { [styles.expanded]: isExpanded })}>
+        <Outlet />
+      </main>
     </div>
   );
 };

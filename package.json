@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"lcp --proxyUrl http://176.108.252.47\" \"vite\"",
+    "dev1": "concurrently \"lcp --proxyUrl https://wiki.mycum.ru\" \"vite\"",
+    "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",

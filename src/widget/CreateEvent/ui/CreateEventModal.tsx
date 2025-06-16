@@ -35,6 +35,7 @@ export const CreateEventModal: React.FC<ICreateEventParams> = createObserver(({ 
       open={recordCreationModal.shown}
       handleClose={recordCreationModal.hide}
       title="Запись пациента на прием"
+      height={700}
     >
       <LocalizationProvider dateAdapter={AdapterMoment}>
         <DatePicker

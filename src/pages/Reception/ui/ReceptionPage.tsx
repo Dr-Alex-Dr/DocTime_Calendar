@@ -17,7 +17,7 @@ export const ReceptionPage = createObserver(() => {
   return (
     <div className={styles.receptionContainer}>
       <Breadcrumbs title="Главная" />
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <div className={styles.receptionHeader}>
         <h2 className={styles.receptionTitle}>Расписание на неделю</h2>
         <img style={{ marginRight: 16 }} src="./src/images/_Fab_.svg" />
       </div>
